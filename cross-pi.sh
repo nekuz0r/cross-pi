@@ -162,6 +162,11 @@ case "$1" in
 		rm -f /usr/local/bin/cross-pi &> /dev/null
 		evaluate_retval
 		;;
+	sysroot)
+		log_info_msg "Creating basic sysroot..."
+		exec $CROSSPI_HOME/make-sysroot.sh
+		evaluate_retval
+		;;
 	*)
 		echo "Usage: $0 {init|update|native|cross|clean|save|restore|install|uninstall}"
 		;;

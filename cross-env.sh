@@ -1,26 +1,26 @@
 #!/bin/bash
 
-TOOLCHAIN=/home/ubuntu/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64
 HOST=arm-linux-gnueabihf
-SYSROOT=/home/ubuntu/sysroot
 
 /usr/bin/env -i \
-	PATH=$TOOLCHAIN/bin:$PATH \
+	PATH=$CROSSPI_TOOLCHAIN/bin:$PATH \
 	CC=$HOST-gcc \
 	CXX=$HOST-g++ \
 	AR=$HOST-ar \
 	RANLIB=$HOST-ranlib \
 	LD=$HOST-ld \
 	\
-	PKG_CONFIG_LIBDIR=$SYSROOT/usr/lib/pkgconfig \
-	PKG_CONFIG_PATH=$SYSROOT/lib/pkgconfig \
-	ACLOCAL_FLAGS="-I $SYSROOT/usr/share/aclocal" \
-	CPPFLAGS="--sysroot=$SYSROOT" \
-	LDFLAGS="--sysroot=$SYSROOT" \
+	PKG_CONFIG_LIBDIR="$CROSSPI_SYSROOT_DIR/usr/lib/pkgconfig,$CROSSPI_TARGET_DIR/usr/lib/pkgconfig" \
+	PKG_CONFIG_PATH="$CROSSPI_SYSROOT_DIR/lib/pkgconfig,$CROSSPI_TARGET_DIR/lib/pkgconfig" \
+	ACLOCAL_FLAGS="-I $CROSSPI_SYSROOT_DIR/usr/share/aclocal -I $CROSSPI_TARGET_DIR/usr/share/aclocal" \
+	CPPFLAGS="--sysroot=$CROSSPI_SYSROOT_DIR -I$CROSSPI_TARGET_DIR/usr/include" \
+	LDFLAGS="--sysroot=$CROSSPI_SYSROOT_DIR -L$CROSSPI_TARGET_DIR/lib -L$CROSSPI_TARGET_DIR/usr/lib" \
 	\
 	SYSROOT=$SYSROOT \
 	HOST=$HOST \
-	DESTDIR=$SYSROOT \
+	CROSS_COMPILE=$HOST \
+	CROSS=$HOST \
+	DESTDIR=$CROSSPI_TARGET_DIR \
 	\
 	HOME=$HOME \
 	TERM=$TERM \

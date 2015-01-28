@@ -1,18 +1,23 @@
 #!/bin/bash
 
-PREFIX=/home/ubuntu/host
-
 /usr/bin/env -i \
-	PATH=$PREFIX/bin:$PATH \
-	LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH \
-	ACLOCAL_FLAGS="-I $PREFIX/share/aclocal" \
-	PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH \
-	CPPFLAGS=-I$PREFIX/include \
-	LDFLAGS=-L$PREFIX/lib \
+	PATH=$CROSSPI_HOST_DIR/bin:$PATH \
+	LD_LIBRARY_PATH=$CROSSPI_HOST_DIR/lib:$LD_LIBRARY_PATH \
+	ACLOCAL_FLAGS="-I $CROSSPI_HOST_DIR/share/aclocal" \
+	PKG_CONFIG_PATH=$CROSSPI_HOST_DIR/lib/pkgconfig:$PKG_CONFIG_PATH \
+	CPPFLAGS=-I$CROSSPI_HOST_DIR/include \
+	LDFLAGS=-L$CROSSPI_HOST_DIR/lib \
+	\
+	CROSSPI_HOME=$CROSSPI_HOME \
+	CROSSPI_HOST_DIR=$CROSSPI_HOST_DIR \
+	CROSSPI_SYSROOT_DIR=$CROSSPI_SYSROOT_DIR \
+	CROSSPI_TARGET_DIR=$CROSSPI_TARGET_DIR \
+	CROSSPI_SOURCES_DIR=$CROSSPI_SOURCES_DIR \
+	CROSSPI_TOOLS_DIR=$CROSSPI_TOOLS_DIR \
 	\
 	HOME=$HOME \
 	TERM=$TERM \
 	\
-	DESTDIR=$PREFIX \
+	DESTDIR=$CROSSPI_HOST_DIR \
 	\
-	/bin/bash --rcfile <(cat ~/.bashrc ; echo 'PS1="\[\033[0;33m\][native x86]\[\033[00m\] $PS1"' ; echo 'alias cross=$HOME/cross-env.sh' ; echo $1) +h
+	/bin/bash --rcfile <(cat ~/.bashrc ; echo 'PS1="\[\033[0;33m\][native x86]\[\033[00m\] $PS1"' ; echo 'alias cross=$CROSSPI_HOME/cross-env.sh' ; echo $1) +h
