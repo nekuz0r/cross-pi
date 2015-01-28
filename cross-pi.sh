@@ -90,7 +90,7 @@ export_env() {
 	if [ host_is_x64 ]; then
 		TOOLCHAIN_SUFFIX="-x64"
 	fi
-	export CROSSPI_TOOLCHAIN=$CROSSPI_TOOLS_DIR/arm-bcm2708/gcc-linaro-arm-gnueabihf-raspbian$TOOLCHAIN_SUFFIX
+	export CROSSPI_TOOLCHAIN=$CROSSPI_TOOLS_DIR/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian$TOOLCHAIN_SUFFIX
 }
 
 host_is_x64() {
@@ -130,6 +130,7 @@ sanity_check() {
 }
 
 CROSSPI_HOME=`get_self_directory`
+cd $CROSSPI_HOME
 
 case "$1" in
 	init)
@@ -164,7 +165,7 @@ case "$1" in
 		;;
 	sysroot)
 		log_info_msg "Creating basic sysroot..."
-		exec $CROSSPI_HOME/make-sysroot.sh
+		$CROSSPI_HOME/make-sysroot.sh $CROSSPI_HOME
 		evaluate_retval
 		;;
 	*)
