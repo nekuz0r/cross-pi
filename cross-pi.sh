@@ -80,25 +80,56 @@ get_self_directory() {
 }
 
 export_env() {
-	export CROSSPI_HOME=$CROSSPI_HOME
+	export CROSSPI_HOME=$(get_self_directory)
 	export CROSSPI_HOST_DIR=$CROSSPI_HOME/host
 	export CROSSPI_SYSROOT_DIR=$CROSSPI_HOME/sysroot
 	export CROSSPI_TARGET_DIR=$CROSSPI_HOME/target
 	export CROSSPI_SOURCES_DIR=$CROSSPI_HOME/sources
 	export CROSSPI_TOOLS_DIR=$CROSSPI_HOME/tools
 
-	if [ host_is_x64 ]; then
+	if [ build_is_x64 ]; then
 		TOOLCHAIN_SUFFIX="-x64"
 	fi
 	export CROSSPI_TOOLCHAIN=$CROSSPI_TOOLS_DIR/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian$TOOLCHAIN_SUFFIX
+
+	export CROSSPI_BUILD=$(build_get_name)
+        export CROSSPI_BUILD_ARCH=$(build_get_arch)
+        export CROSSPI_HOST=$(host_get_arch)
+        export CROSSPI_HOST_ARCH=$(host_get_arch)
+        export CROSSPI_TARGET=$(target_get_name)
+        export CROSSPI_TARGET_ARCH=$(target_get_arch)
 }
 
-host_is_x64() {
-	MACHINE_TYPE=`uname -m`
-	if [ ${MACHINE_TYPE} == 'x86_64' ]; then
+build_get_arch() {
+	echo $(uname -m | tr '[a-z]' '[A-Z]')
+}
+
+build_get_name() {
+	echo $(gcc -dumpmachine)
+}
+
+build_is_x64() {
+	MACHINE_TYPE=$(build_get_arch)
+	if [ ${MACHINE_TYPE} == 'X86_64' ]; then
 		return 1
 	fi
 	return 0
+}
+
+host_get_arch() {
+	echo $(host_get_name | cut -d'-' -f1 | tr '[a-z]' '[A-Z]')
+}
+
+host_get_name() {
+	echo "arm-linux-gnueabihf"
+}
+
+target_get_arch() {
+	echo $(host_get_arch)
+}
+
+target_get_name() {
+	echo $(host_get_name)
 }
 
 download_raspberrypi_tools() {
@@ -129,8 +160,7 @@ sanity_check() {
 	return 0
 }
 
-CROSSPI_HOME=`get_self_directory`
-cd $CROSSPI_HOME
+export_env
 
 case "$1" in
 	init)
@@ -140,11 +170,9 @@ case "$1" in
 		update_raspberrypi_tools
 		;;
 	native)
-		export_env
 		exec $CROSSPI_HOME/host-env.sh
 		;;
 	cross)
-		export_env
 		exec $CROSSPI_HOME/host-env.sh $CROSSPI_HOME/cross-env.sh
 		;;
 	clean)

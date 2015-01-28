@@ -1,6 +1,7 @@
 #!/bin/bash
 
 if [ -z "${1}" ]; then
+	echo "no args"
 	exit 1
 fi
 
@@ -9,10 +10,12 @@ CROSSPI_TOOLS_DIR=$CROSSPI_HOME/tools
 CROSSPI_SYSROOT_DIR=$CROSSPI_HOME/sysroot
 
 if [ ! -d "$CROSSPI_TOOLS_DIR/.git" ]; then
+	echo "no tools"
 	exit 1
 fi
 
 if find "$CROSSPI_SYSROOT_DIR" -mindepth 1 -print -quit | grep -q .; then
+	echo "sysroot not empty"
 	exit 1
 fi
 
@@ -31,3 +34,5 @@ mv $CROSSPI_SYSROOT_DIR/usr/include/arm-linux-gnueabihf/* $CROSSPI_SYSROOT_DIR/u
 rm -Rf $CROSSPI_SYSROOT_DIR/usr/include/arm-linux-gnueabihf
 cp -R $TOOLCHAIN_ARM_DIR/libc/usr/lib/arm-linux-gnueabihf $CROSSPI_SYSROOT_DIR/usr/lib/
 cp -R $TOOLCHAIN_ARM_DIR/libc/usr/lib/locale $CROSSPI_SYSROOT_DIR/usr/lib/
+
+exit 0
