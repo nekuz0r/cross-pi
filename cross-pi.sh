@@ -18,6 +18,22 @@ CROSSPI_HOME=$(get_self_directory)
 . $CROSSPI_HOME/lib/cross-pi-utils
 . $CROSSPI_HOME/lib/cross-pi-rpi-tools
 
+check_user_not_root() {
+	if [ "$(id -u)" = "0" ]; then
+		echo -e "${FAILURE}Error:${NORMAL} This action cannot be run as root !" 1>&2
+		exit 1
+	fi
+}
+
+check_inception() {
+	if [ ! -z "$CROSSPI_SHELL" ]; then
+		echo -e "${FAILURE}Error:${NORMAL} No cross-piception !" 1>&2
+		exit 1
+	fi
+}
+
+check_inception
+
 export_env
 
 sanity_check() {
@@ -35,7 +51,7 @@ case "$1" in
 		exec $CROSSPI_HOME/host-env.sh
 		;;
 	cross)
-		exec $CROSSPI_HOME/host-env.sh $CROSSPI_HOME/cross-env.sh
+		exec $CROSSPI_HOME/host-env.sh "exec $CROSSPI_HOME/cross-env.sh"
 		;;
 	clean)
 		;;
