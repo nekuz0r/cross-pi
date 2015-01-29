@@ -40,6 +40,11 @@ sanity_check() {
 	return 0
 }
 
+run_shell() {
+	export CROSSPI_SHELL=$1
+	exec $CROSSPI_HOME/shells/$CROSSPI_SHELL/shell.sh
+}
+
 case "$1" in
 	init)
 		download_raspberrypi_tools
@@ -48,10 +53,10 @@ case "$1" in
 		update_raspberrypi_tools
 		;;
 	native)
-		exec $CROSSPI_HOME/host-env.sh
+		run_shell "native"
 		;;
 	cross)
-		exec $CROSSPI_HOME/host-env.sh "exec $CROSSPI_HOME/cross-env.sh"
+		run_shell "cross"
 		;;
 	clean)
 		;;

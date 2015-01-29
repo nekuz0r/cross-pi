@@ -21,8 +21,21 @@ fi
 
 TOOLCHAIN_ARM_DIR=$CROSSPI_TOOLS_DIR/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/arm-linux-gnueabihf
 
-mkdir -p $CROSSPI_SYSROOT_DIR/{usr,lib}
-mkdir -p $CROSSPI_SYSROOT_DIR/usr/{lib,include,local,libexec,share}
+mkdir -p $CROSSPI_SYSROOT_DIR/{bin,boot,etc/{opt,sysconfig},home,lib,mnt,opt}
+mkdir -p $CROSSPI_SYSROOT_DIR/{media/{floppy,cdrom},sbin,srv,var}
+install -d -m 0750 $CROSSPI_SYSROOT_DIR/root
+install -d -m 1777 $CROSSPI_SYSROOT_DIR/tmp $CROSSPI_SYSROOT_DIR/var/tmp
+mkdir -p $CROSSPI_SYSROOT_DIR/usr/{,local/}{bin,include,lib,sbin,src}
+mkdir -p $CROSSPI_SYSROOT_DIR/usr/{,local/}share/{color,dict,doc,info,locale,man}
+mkdir $CROSSPI_SYSROOT_DIR/usr/{,local/}share/{misc,terminfo,zoneinfo}
+mkdir $CROSSPI_SYSROOT_DIR/usr/libexec
+mkdir -p $CROSSPI_SYSROOT_DIR/usr/{,local/}share/man/man{1..8}
+mkdir $CROSSPI_SYSROOT_DIR/var/{log,mail,spool}
+ln -s $CROSSPI_SYSROOT_DIR/run $CROSSPI_SYSROOT_DIR/var/run
+ln -s $CROSSPI_SYSROOT_DIR/run/lock $CROSSPI_SYSROOT_DIR/var/lock
+mkdir -p $CROSSPI_SYSROOT_DIR/var/{opt,cache,lib/{color,misc,locate},local}
+mkdir $CROSSPI_SYSROOT_DIR/usr/local/games
+mkdir $CROSSPI_SYSROOT_DIR/usr/share/games
 
 cp -R $TOOLCHAIN_ARM_DIR/lib/* $CROSSPI_SYSROOT_DIR/usr/lib/
 cp -R $TOOLCHAIN_ARM_DIR/include/* $CROSSPI_SYSROOT_DIR/usr/include/

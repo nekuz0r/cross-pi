@@ -15,7 +15,7 @@ export_env() {
 
 	export CROSSPI_BUILD=$(build_get_name)
         export CROSSPI_BUILD_ARCH=$(build_get_arch)
-        export CROSSPI_HOST=$(host_get_arch)
+        export CROSSPI_HOST=$(host_get_name)
         export CROSSPI_HOST_ARCH=$(host_get_arch)
         export CROSSPI_TARGET=$(target_get_name)
         export CROSSPI_TARGET_ARCH=$(target_get_arch)
