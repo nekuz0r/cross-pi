@@ -1,0 +1,162 @@
+#!/bin/bash
+
+. $CROSSPI_HOME/lib/console-functions
+
+SCRIPT=${1}
+shift 1
+
+SCRIPT_PATH=${CROSSPI_HOME}/scripts/${CROSSPI_SHELL}/${SCRIPT:0:1}/$SCRIPT
+PKG_SRC_DIR=${CROSSPI_SOURCES_DIR}/${SCRIPT}
+PKG_BUILD_DIR=${CROSSPI_SOURCES_DIR}/${SCRIPT}-build
+
+if [ ! -f ${SCRIPT_PATH} ]; then
+	log_failure_msg "No installation script '${SCRIPT}' found !"
+	exit 1
+fi
+
+create_source_dir() {
+	mkdir -p ${PKG_SRC_DIR}
+}
+
+build_external() {
+	mkdir -p ${PKG_BUILD_DIR}
+	PKG_BUILD_DIR_SET=1
+}
+
+. $SCRIPT_PATH
+
+if [ ! -z ${PKG_SRC_URL} ]; then
+	ARCHIVE_NAME=$(basename ${PKG_SRC_URL})
+fi
+CROSSPI_TMP_DIR=/tmp/cross-pi
+CROSSPI_TMP_DOWNLOAD_DIR=${CROSSPI_TMP_DIR}/downloads
+PKG_SRC_TMP_FILE=${CROSSPI_TMP_DOWNLOAD_DIR}/${ARCHIVE_NAME}
+PKG_LOG_FILE=${CROSSPI_TMP_DIR}/${PKG_NAME}.log
+
+if [ ! -d "${CROSSPI_TMP_DIR}" ]; then
+	mkdir -p ${CROSSPI_TMP_DIR}
+fi
+
+if [ ! -d "${CROSSPI_TMP_DOWNLOAD_DIR}" ]; then
+	mkdir -p ${CROSSPI_TMP_DOWNLOAD_DIR}
+fi
+
+is_function_present() {
+	declare -Ff "$1" > /dev/null
+}
+
+clear_log_file() {
+	>${PKG_LOG_FILE}
+}
+
+cleanup() {
+	rm -Rf ${PKG_SRC_DIR} &>> ${PKG_LOG_FILE}
+	if [ -z ${PKG_BUILD_DIR_SET} ]; then
+		rm -Rf ${PKG_BUILD_DIR} &>> ${PKG_LOG_FILE}
+	fi
+	PKG_BUILD_DIR_SET=""
+}
+
+download_sources() {
+	if [ -z "${PKG_SRC_URL}" ]; then
+		return 0
+	fi
+	
+	if [ ! -d "${CROSSPI_TMP_DOWNLOAD_DIR}" ]; then
+		mkdir -pv ${CROSSPI_TMP_DOWNLOAD_DIR} &>> ${PKG_LOG_FILE}
+	fi
+	
+	if [ ! -f "${PKG_SRC_TMP_FILE}" ]; then
+		log_info_msg "Downloading ${PKG_NAME} source..."
+		wget ${PKG_SRC_URL} -O ${PKG_SRC_TMP_FILE} -a ${PKG_LOG_FILE}
+		evaluate_retval || exit_clean
+	fi
+	
+	for EXTRA_DOWNLOAD_URL in ${EXTRA_DOWNLOADS[*]}
+	do
+		local EXTRA_DOWNLOAD_FILENAME=$(basename ${EXTRA_DOWNLOAD_URL})
+		if [ ! -f ${CROSSPI_TMP_DOWNLOAD_DIR}/${EXTRA_DOWNLOAD_FILENAME} ]; then
+			log_info_msg "Downloading ${EXTRA_DOWNLOAD_FILENAME}..."
+			wget ${EXTRA_DOWNLOAD_URL} -O ${CROSSPI_TMP_DOWNLOAD_DIR}/${EXTRA_DOWNLOAD_FILENAME} -a ${PKG_LOG_FILE}
+			evaluate_retval || exit_clean
+		fi
+	done
+	
+	# check and exit on error
+}
+
+extract_sources() {
+	if [ -z "${PKG_SRC_URL}" ]; then
+		return 0
+	fi
+	
+	log_info_msg "Extracting ${PKG_NAME} sources..."
+	if [ -d "${PKG_SRC_DIR}" ]; then
+		tar xpf ${PKG_SRC_TMP_FILE} -C ${PKG_SRC_DIR} &>> ${PKG_LOG_FILE}
+	else
+		tar xpf ${PKG_SRC_TMP_FILE} -C ${CROSSPI_SOURCES_DIR} &>> ${PKG_LOG_FILE}
+	fi
+	evaluate_retval || exit_clean
+	
+	# check and exit on error
+}
+
+enter_build_dir() {
+	local DEST=${PKG_SRC_DIR}
+	
+	if [ -d ${PKG_BUILD_DIR} ]; then
+		DEST=${PKG_BUILD_DIR}
+	fi
+	
+	if [ -d ${DEST} ]; then
+		cd ${DEST}
+	fi
+}
+
+enter_source_dir() {
+	if [ -d ${PKG_SRC_DIR} ]; then
+		cd ${PKG_SRC_DIR}
+	fi
+}
+
+exit_clean() {
+	if [ ${?} != 0 ]; then
+		cleanup
+		exit 1
+	fi
+}
+
+clear_log_file
+cleanup
+download_sources
+extract_sources 
+
+enter_source_dir
+
+if is_function_present crosspi_patch; then
+	log_info_msg "Patching ${PKG_NAME} sources..."
+	(crosspi_patch) &>> ${PKG_LOG_FILE}
+	evaluate_retval || exit_clean
+fi
+
+enter_build_dir
+
+if is_function_present crosspi_configure; then
+	log_info_msg "Configuring ${PKG_NAME}..."
+	(crosspi_configure) &>> ${PKG_LOG_FILE}
+	evaluate_retval || exit_clean
+fi
+
+if is_function_present crosspi_build; then
+	log_info_msg "Building ${PKG_NAME}..."
+	(crosspi_build) &>> ${PKG_LOG_FILE}
+	evaluate_retval || exit_clean
+fi
+
+if is_function_present crosspi_install; then
+	log_info_msg "Installing ${PKG_NAME}..."
+	(crosspi_install) &>> ${PKG_LOG_FILE}
+	evaluate_retval || exit_clean
+fi
+
+cleanup &>> ${PKG_LOG_FILE}

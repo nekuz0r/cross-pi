@@ -1,0 +1,102 @@
+#!/bin/bash
+
+ZONE=${1}
+if [ -z "${ZONE}" ]; then
+  log_warning_msg "No zone specified, defaulting to Europe/Brussels !"
+  ZONE="Europe/Brussels"
+fi
+
+PKG_NAME=glibc-2.20
+PKG_SRC_URL=http://ftp.gnu.org/gnu/glibc/${PKG_NAME}.tar.xz
+
+EXTRA_DOWNLOADS[0]=http://www.linuxfromscratch.org/patches/lfs/7.6/${PKG_NAME}-fhs-1.patch
+EXTRA_DOWNLOADS[1]=http://www.iana.org/time-zones/repository/releases/tzdata2014j.tar.gz
+
+build_external
+
+crosspi_patch() {
+  patch -Np1 -i ${CROSSPI_TMP_DOWNLOAD_DIR}/${PKG_NAME}-fhs-1.patch
+}
+
+crosspi_configure() {
+  BUILD_CC="gcc" ${PKG_SRC_DIR}/configure --prefix=/usr --disable-profile --enable-kernel=2.6.32 --enable-obsolete-rpc --build=${CROSSPI_BUILD} --host=${CROSSPI_HOST} --target=${CROSSPI_HOST}
+}
+
+crosspi_build() {
+	make
+}
+
+crosspi_install() {
+  mkdir -p ${CROSSPI_TARGET_DIR}/etc
+  touch ${CROSSPI_TARGET_DIR}/etc/ld.so.conf
+  make install
+  cp -v ${PKG_SRC_DIR}/nscd/nscd.conf ${CROSSPI_TARGET_DIR}/etc/nscd.conf
+  mkdir -pv ${CROSSPI_TARGET_DIR}/var/cache/nscd
+  mkdir -pv ${CROSSPI_TARGET_DIR}/usr/lib/locale
+  
+  localedef -i cs_CZ -f UTF-8 cs_CZ.UTF-8 --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i de_DE -f ISO-8859-1 de_DE --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i de_DE@euro -f ISO-8859-15 de_DE@euro --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i de_DE -f UTF-8 de_DE.UTF-8 --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i en_GB -f UTF-8 en_GB.UTF-8 --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i en_HK -f ISO-8859-1 en_HK --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i en_PH -f ISO-8859-1 en_PH --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i en_US -f ISO-8859-1 en_US --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i en_US -f UTF-8 en_US.UTF-8 --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i es_MX -f ISO-8859-1 es_MX --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i fa_IR -f UTF-8 fa_IR --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i fr_FR -f ISO-8859-1 fr_FR --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i fr_FR@euro -f ISO-8859-15 fr_FR@euro --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i fr_FR -f UTF-8 fr_FR.UTF-8 --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i it_IT -f ISO-8859-1 it_IT --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i it_IT -f UTF-8 it_IT.UTF-8 --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i ja_JP -f EUC-JP ja_JP --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i ru_RU -f KOI8-R ru_RU.KOI8-R --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i ru_RU -f UTF-8 ru_RU.UTF-8 --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i tr_TR -f UTF-8 tr_TR.UTF-8 --prefix=${CROSSPI_TARGET_DIR}
+  localedef -i zh_CN -f GB18030 zh_CN.GB18030 --prefix=${CROSSPI_TARGET_DIR}
+  
+  cat > ${CROSSPI_TARGET_DIR}/etc/nsswitch.conf << _EOF_
+  # Begin /etc/nsswitch.conf
+
+  passwd: files
+  group: files
+  shadow: files
+
+  hosts: files dns
+  networks: files
+
+  protocols: files
+  services: files
+  ethers: files
+  rpc: files
+
+  # End /etc/nsswitch.conf
+_EOF_
+  
+  tar -xf ${CROSSPI_TMP_DOWNLOAD_DIR}/tzdata2014j.tar.gz
+  
+  ZONEINFO=${CROSSPI_TARGET_DIR}/usr/share/zoneinfo
+  mkdir -pv ${ZONEINFO}/{posix,right}
+  
+  for tz in etcetera southamerica northamerica europe africa antarctica  \
+          asia australasia backward pacificnew systemv; do
+      zic -L /dev/null   -d ${ZONEINFO}       -y "sh yearistype.sh" ${tz}
+      zic -L /dev/null   -d ${ZONEINFO}/posix -y "sh yearistype.sh" ${tz}
+      zic -L leapseconds -d ${ZONEINFO}/right -y "sh yearistype.sh" ${tz}
+  done
+  
+  cp -v zone.tab zone1970.tab iso3166.tab ${ZONEINFO}
+  zic -d ${ZONEINFO} -p ${ZONE}
+  unset ZONEINFO
+  
+  cp -v ${CROSSPI_TARGET_DIR}/usr/share/zoneinfo/${ZONE} ${CROSSPI_TARGET_DIR}/etc/localtime
+  
+  cat > ${CROSSPI_TARGET_DIR}/etc/ld.so.conf << _EOF_
+  # Begin /etc/ld.so.conf
+  ${CROSSPI_TARGET_DIR}/usr/local/lib
+  ${CROSSPI_TARGET_DIR}/opt/lib
+
+  # End /etc/ld.so.conf
+_EOF_
+}

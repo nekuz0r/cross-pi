@@ -1,0 +1,20 @@
+#!/bin/bash
+
+PKG_NAME=fhs
+
+crosspi_install() {
+  mkdir -pv ${CROSSPI_TARGET_DIR}/{bin,boot,etc/{opt,sysconfig},home,lib,mnt,opt}
+  mkdir -pv ${CROSSPI_TARGET_DIR}/{media/{floppy,cdrom},sbin,srv,var}
+  install -dv -m 0750 ${CROSSPI_TARGET_DIR}/root
+  install -dv -m 1777 ${CROSSPI_TARGET_DIR}/tmp /var/tmp
+  mkdir -pv ${CROSSPI_TARGET_DIR}/usr/{,local/}{bin,include,lib,sbin,src}
+  mkdir -pv ${CROSSPI_TARGET_DIR}/usr/{,local/}share/{color,dict,doc,info,locale,man}
+  mkdir -v  ${CROSSPI_TARGET_DIR}/usr/{,local/}share/{misc,terminfo,zoneinfo}
+  mkdir -v  ${CROSSPI_TARGET_DIR}/usr/libexec
+  mkdir -pv ${CROSSPI_TARGET_DIR}/usr/{,local/}share/man/man{1..8}
+  
+  mkdir -v ${CROSSPI_TARGET_DIR}/var/{log,mail,spool}
+  ln -sv ${CROSSPI_TARGET_DIR}/run ${CROSSPI_TARGET_DIR}/var/run
+  ln -sv ${CROSSPI_TARGET_DIR}/run/lock ${CROSSPI_TARGET_DIR}/var/lock
+  mkdir -pv ${CROSSPI_TARGET_DIR}/var/{opt,cache,lib/{color,misc,locate},local}
+}

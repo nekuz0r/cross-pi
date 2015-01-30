@@ -22,7 +22,7 @@ export_env() {
 }
 
 build_get_arch() {
-	echo $(uname -m | tr '[a-z]' '[A-Z]')
+	echo $(uname -m)
 }
 
 build_get_name() {
@@ -31,14 +31,14 @@ build_get_name() {
 
 build_is_x64() {
 	MACHINE_TYPE=$(build_get_arch)
-	if [ ${MACHINE_TYPE} == 'X86_64' ]; then
+	if [ ${MACHINE_TYPE} == '86_64' ]; then
 		return 1
 	fi
 	return 0
 }
 
 host_get_arch() {
-	echo $(host_get_name | cut -d'-' -f1 | tr '[a-z]' '[A-Z]')
+	echo $(host_get_name | cut -d'-' -f1)
 }
 
 host_get_name() {

@@ -41,20 +41,20 @@ log_success_msg() {
 }
 
 log_failure_msg() {
-        echo -n -e "${BMPREFIX}${@}"
-        echo -e "${CURS_ZERO}${FAILURE_PREFIX}${SET_COL}${FAILURE_SUFFIX}"
-        return 0
+  echo -n -e "${BMPREFIX}${@}"
+  echo -e "${CURS_ZERO}${FAILURE_PREFIX}${SET_COL}${FAILURE_SUFFIX}"
+  return 0
 }
 
 log_warning_msg() {
-        echo -n -e "${BMPREFIX}${@}"
-        echo -e "${CURS_ZERO}${WARNING_PREFIX}${SET_COL}${WARNING_SUFFIX}"
-        return 0
+  echo -n -e "${BMPREFIX}${@}"
+  echo -e "${CURS_ZERO}${WARNING_PREFIX}${SET_COL}${WARNING_SUFFIX}"
+  return 0
 }
 
 log_info_msg() {
-        echo -n -e "${BMPREFIX}${@}"
-        return 0
+  echo -n -e "${BMPREFIX}${@}"
+  return 0
 }
 
 evaluate_retval() {
@@ -65,4 +65,6 @@ evaluate_retval() {
 	else
 		log_failure_msg
 	fi
+	
+	return ${error_value}
 }
