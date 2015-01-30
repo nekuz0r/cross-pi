@@ -1,7 +1,9 @@
 #!/bin/bash
 
 /usr/bin/env \
-	PATH=$CROSSPI_TOOLCHAIN/bin:$CROSSPI_HOST_DIR/bin:$CROSSPI_HOST_DIR/usr/bin:$CROSSPI_HOST_DIR/usr/local/bin:$PATH \
+	PATH=$(echo "$CROSSPI_TOOLCHAIN/bin:$CROSSPI_HOST_DIR/bin:$CROSSPI_HOST_DIR/usr/bin:$CROSSPI_HOST_DIR/usr/local/bin:$PATH" | sed 's/:$//') \
+	LD_LIBRARY_PATH=$(echo "$CROSSPI_HOST_DIR/lib:$CROSSPI_HOST_DIR/usr/lib:$CROSSPI_HOST_DIR/usr/local/lib:$LD_LIBRARY_PATH" | sed 's/:$//') \
+	\
 	CC=$CROSSPI_HOST-gcc \
 	CXX=$CROSSPI_HOST-g++ \
 	AR=$CROSSPI_HOST-ar \
@@ -21,8 +23,8 @@
 	SYSROOT=$CROSSPI_SYSROOT_DIR \
 	HOST=$CROSSPI_HOST \
 	TARGET=$CROSSPI_TARGET \
-	CROSS_COMPILE=$CROSSPI_HOST \
-	CROSS=$CROSSPI_HOST \
+	CROSS_COMPILE=${CROSSPI_HOST}- \
+	CROSS=${CROSSPI_HOST}- \
 	DESTDIR=$CROSSPI_TARGET_DIR \
 	\
-	/bin/bash --noprofile --rcfile $CROSSPI_HOME/shells/$CROSSPI_SHELL/bashrc +h
+	/bin/bash --noprofile --rcfile $CROSSPI_HOME/shells/$CROSSPI_SHELL/bashrc +h $@

@@ -42,7 +42,8 @@ sanity_check() {
 
 run_shell() {
 	export CROSSPI_SHELL=$1
-	exec $CROSSPI_HOME/shells/$CROSSPI_SHELL/shell.sh
+	shift 1
+	exec $CROSSPI_HOME/shells/$CROSSPI_SHELL/sh $@
 }
 
 case "$1" in
@@ -53,10 +54,28 @@ case "$1" in
 		update_raspberrypi_tools
 		;;
 	native)
-		run_shell "native"
+		case "$2" in
+			shell)
+				run_shell $1
+				;;
+			install)
+				run_shell $1 $CROSSPI_HOME/lib/cross-pi-run-install-script ${@:3}
+				;;
+			*)
+				;;
+		esac
 		;;
 	cross)
-		run_shell "cross"
+		case "$2" in
+			shell)
+				run_shell $1
+				;;
+			install)
+				run_shell $1 $CROSSPI_HOME/lib/cross-pi-run-install-script ${@:3}
+				;;
+			*)
+				;;
+		esac
 		;;
 	clean)
 		;;

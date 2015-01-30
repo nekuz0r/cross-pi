@@ -14,7 +14,8 @@ shopt -s checkwinsize
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-PS1="\[\033[0;33m\][cross $CROSSPI_BUILD_ARCH]\[\033[00m\] \w\$ "
+PS1_ARCH=$(echo $CROSSPI_BUILD_ARCH | tr '[a-z]' '[A-Z]')
+PS1="\[\033[0;33m\][cross $PS1_ARCH]\[\033[00m\] \w\$ "
 
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
