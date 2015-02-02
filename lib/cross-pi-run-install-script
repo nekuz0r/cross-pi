@@ -19,7 +19,7 @@ create_source_dir() {
 }
 
 build_external() {
-	mkdir -p ${PKG_BUILD_DIR}
+	mkdir -pv ${PKG_BUILD_DIR}
 	PKG_BUILD_DIR_SET=1
 }
 
@@ -52,6 +52,7 @@ clear_log_file() {
 cleanup() {
 	rm -Rf ${PKG_SRC_DIR} &>> ${PKG_LOG_FILE}
 	if [ -z ${PKG_BUILD_DIR_SET} ]; then
+		echo "remove build dir"
 		rm -Rf ${PKG_BUILD_DIR} &>> ${PKG_LOG_FILE}
 	fi
 	PKG_BUILD_DIR_SET=""
@@ -107,7 +108,7 @@ enter_build_dir() {
 	if [ -d ${PKG_BUILD_DIR} ]; then
 		DEST=${PKG_BUILD_DIR}
 	fi
-	
+	echo ${DEST}
 	if [ -d ${DEST} ]; then
 		cd ${DEST}
 	fi

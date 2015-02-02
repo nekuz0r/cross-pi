@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=libffi-3.2.1
+PKG_SRC_URL=ftp://sourceware.org/pub/libffi/${PKG_NAME}.tar.gz
+
+crosspi_configure() {
+	$PKG_SRC_DIR/configure --build=$CROSSPI_BUILD --host=$CROSSPI_HOST --target=$CROSSPI_TARGET --prefix=/usr
+}
+
+crosspi_build() {
+	make
+}
+
+crosspi_install() {
+	make install
+}

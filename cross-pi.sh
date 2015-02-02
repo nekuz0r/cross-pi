@@ -46,6 +46,15 @@ run_shell() {
 	exec $CROSSPI_HOME/shells/$CROSSPI_SHELL/sh $@
 }
 
+search_script() {
+	if [ ! -z "${2}" ]; then
+		RESULTS=$(basename -a $(find ${CROSSPI_HOME}/scripts/${1} | sed "s|${CROSSPI_HOME}/scripts/${1}\(/.\)\?||" | xargs) | grep -i "${2}")
+		if [ ! -z "${RESULTS}" ]; then
+			echo ${RESULTS}
+		fi
+	fi
+}
+
 case "$1" in
 	init)
 		download_raspberrypi_tools
@@ -61,6 +70,9 @@ case "$1" in
 			install)
 				run_shell $1 $CROSSPI_HOME/lib/cross-pi-run-install-script ${@:3}
 				;;
+			search)
+				search_script $1 $3
+				;;
 			*)
 				;;
 		esac
@@ -72,6 +84,9 @@ case "$1" in
 				;;
 			install)
 				run_shell $1 $CROSSPI_HOME/lib/cross-pi-run-install-script ${@:3}
+				;;
+			search)
+				search_script $1 $3
 				;;
 			*)
 				;;

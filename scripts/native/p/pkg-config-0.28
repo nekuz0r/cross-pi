@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=pkg-config-0.28
+PKG_SRC_URL=http://pkgconfig.freedesktop.org/releases/${PKG_NAME}.tar.gz
+
+crosspi_configure() {
+	$PKG_SRC_DIR/configure --prefix=$CROSSPI_HOST_DIR/usr --with-internal-glib --disable-host-tool --docdir=$CROSSPI_HOST_DIR/usr/share/doc/pkg-config-0.28
+}
+
+crosspi_build() {
+	make
+}
+
+crosspi_install() {
+	make install
+}

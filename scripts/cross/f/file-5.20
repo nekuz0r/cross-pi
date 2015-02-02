@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=file-5.20
+PKG_SRC_URL=ftp://ftp.astron.com/pub/file/${PKG_NAME}.tar.gz
+
+crosspi_configure() {
+	$PKG_SRC_DIR/configure --prefix=/usr --host=$CROSSPI_HOST
+}
+
+crosspi_build() {
+	make
+}
+
+crosspi_install() {
+	make install
+}

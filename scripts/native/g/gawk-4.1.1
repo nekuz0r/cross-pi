@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=gawk-4.1.1
+PKG_SRC_URL=http://ftp.gnu.org/gnu/gawk/${PKG_NAME}.tar.xz
+
+crosspi_configure() {
+	$PKG_SRC_DIR/configure --prefix=$CROSSPI_HOST_DIR/usr
+}
+
+crosspi_build() {
+	make
+}
+
+crosspi_install() {
+	make install
+}

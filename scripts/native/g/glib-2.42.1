@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=glib-2.42.1
+PKG_SRC_URL=http://ftp.gnome.org/pub/gnome/sources/glib/2.42/glib-2.42.1.tar.xz
+
+crosspi_configure() {
+	$PKG_SRC_DIR/configure --prefix=$CROSSPI_HOST_DIR/usr
+}
+
+crosspi_build() {
+	make
+}
+
+crosspi_install() {
+	make install
+}
