@@ -1,0 +1,23 @@
+#!/bin/bash
+
+crosspi_run_shell() {
+  export CROSSPI_SHELL=${1}
+  shift 1
+  exec ${CROSSPI_HOME}/shells/${CROSSPI_SHELL}/sh ${@}
+}
+
+crosspi_open_native_shell() {
+  crosspi_run_shell "native"
+}
+
+crosspi_open_cross_shell() {
+  crosspi_run_shell "cross"
+}
+
+crosspi_run_in_native_shell() {
+  crosspi_run_shell "native" ${@}
+}
+
+crosspi_run_in_cross_shell() {
+  crosspi_run_shell "cross" ${@}
+}

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+PKG_NAME=glibc-2.20
+PKG_URL=http://ftpmirror.gnu.org/glibc/${PKG_NAME}.tar.xz
+
+PKG_REQUIRE_SEPERATED_BUILD_DIR=true
+PKG_NO_CLEANUP=true
+
+pkg_configure() {
+  DESTDIR=${CROSSPI_SYSROOT_DIR} ${PKG_SRC_DIR}/configure --prefix=/usr \
+                                                          --build=${CROSSPI_BUILD} \
+                                                          --host=${CROSSPI_TARGET} \
+                                                          --target=${CROSSPI_TARGET} \
+                                                          --with-headers=${CROSSPI_SYSROOT_DIR}/usr/include \
+                                                          --disable-multilib \
+                                                          --disable-profile \
+                                                          --enable-kernel=2.6.32 \
+                                                          libc_cv_forced_unwind=yes
+}
+
+pkg_build() {
+  DESTDIR=${CROSSPI_SYSROOT_DIR} make install-bootstrap-header=yes install_root=${CROSSPI_SYSROOT_DIR} install-headers
+  DESTDIR=${CROSSPI_SYSROOT_DIR} make install-bootstrap-header=yes install_root=${CROSSPI_SYSROOT_DIR} -j${CROSSPI_BUILD_NPROC} csu/subdir_lib
+}
+
+pkg_install() {
+  mkdir -pv ${CROSSPI_SYSROOT_DIR}/usr/lib
+  install ${PKG_BUILD_DIR}/csu/crt1.o ${PKG_BUILD_DIR}/csu/crti.o ${PKG_BUILD_DIR}/csu/crtn.o ${CROSSPI_SYSROOT_DIR}/usr/lib
+  arm-linux-gnueabihf-gcc -nostdlib -nostartfiles -shared -x c /dev/null -o ${CROSSPI_SYSROOT_DIR}/usr/lib/libc.so
+  touch ${CROSSPI_SYSROOT_DIR}/usr/include/gnu/stubs.h
+}

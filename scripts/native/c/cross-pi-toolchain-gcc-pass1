@@ -1,0 +1,69 @@
+#!/bin/bash
+
+PKG_NAME=gcc-4.9.2
+PKG_URL=http://ftpmirror.gnu.org/gcc/gcc-4.9.2/gcc-4.9.2.tar.gz
+
+PKG_EXTRA_URLS[0]=http://ftpmirror.gnu.org/mpfr/mpfr-3.1.2.tar.xz
+PKG_EXTRA_URLS[1]=http://ftpmirror.gnu.org/gmp/gmp-6.0.0a.tar.xz
+PKG_EXTRA_URLS[2]=http://ftpmirror.gnu.org/mpc/mpc-1.0.2.tar.gz
+PKG_EXTRA_URLS[3]=ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-0.12.2.tar.bz2
+PKG_EXTRA_URLS[4]=ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-0.18.1.tar.gz
+
+PKG_REQUIRE_SEPERATED_BUILD_DIR=true
+PKG_NO_CLEANUP=true
+
+pkg_configure_pre() {
+  # Add mpfr-3.1.2 to gcc-4.9.2 source directory
+  tar xf ${PKG_TMP_EXTRA_FILES[0]} -C ${PKG_SRC_DIR}
+  ln -sv ${PKG_SRC_DIR}/mpfr-3.1.2 ${PKG_SRC_DIR}/mpfr
+  
+  # Add gmp-6.0.0a to gcc-4.9.2 source directory
+  tar xf ${PKG_TMP_EXTRA_FILES[1]} -C ${PKG_SRC_DIR}
+  ln -sv ${PKG_SRC_DIR}/gmp-6.0.0 ${PKG_SRC_DIR}/gmp
+  
+  # Add mpc-1.0.2 to gcc-4.9.2 source directory
+  tar xf ${PKG_TMP_EXTRA_FILES[2]} -C ${PKG_SRC_DIR}
+  ln -sv ${PKG_SRC_DIR}/mpc-1.0.2 ${PKG_SRC_DIR}/mpc
+  
+  # Add isl-0.12.2 to gcc-4.9.2 source directory
+  tar xf ${PKG_TMP_EXTRA_FILES[3]} -C ${PKG_SRC_DIR}
+  ln -sv ${PKG_SRC_DIR}/isl-0.12.2 ${PKG_SRC_DIR}/isl
+  
+  # Add cloog-0.18.1 to gcc-4.9.2 source directory
+  tar xf ${PKG_TMP_EXTRA_FILES[4]} -C ${PKG_SRC_DIR}
+  ln -sv ${PKG_SRC_DIR}/cloog-0.18.1 ${PKG_SRC_DIR}/cloog
+}
+
+pkg_configure() {
+  $PKG_SRC_DIR/configure  --prefix=${CROSSPI_TOOLCHAIN_DIR}/usr \
+                          --build=${CROSSPI_BUILD} \
+                          --host=${CROSSPI_BUILD} \
+                          --target=${CROSSPI_TARGET} \
+                          --with-sysroot=${CROSSPI_SYSROOT_DIR} \
+                          --enable-languages=c,c++,fortran \
+                          --disable-multilib \
+                          --enable-multiarch \
+                          --with-arch=armv6 \
+                          --with-tune=arm1176jz-s \
+                          --with-fpu=vfp \
+                          --with-float=hard \
+                          --enable-_cxa_atexit \
+                          --enable-libmudflap \
+                          --enable-libgomp \
+                          --enable-libssp \
+                          --enable-threads=posix \
+                          --disable-libstdcxx-pch \
+                          --enable-linker-build-id \
+                          --enable-plugin \
+                          --enable-gold \
+                          --enable-c99 \
+                          --enable-long-long
+}
+
+pkg_build() {
+  make -j${CROSSPI_BUILD_NPROC} all-gcc
+}
+
+pkg_install() {
+  make install-gcc
+}

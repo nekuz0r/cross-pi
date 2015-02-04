@@ -1,0 +1,37 @@
+# Cross-Pi
+
+## PKG Scripts
+
+### Static vars
+
+PKG_NAME=
+PKG_DESCRIPTION=
+PKG_URL=
+PKG_EXTRA_URLS=
+PKG_EXTRACT_IN_DIR=[y/n/1/0/yes/no/true/false]
+PKG_EXTRACTED_DIRNAME=
+PKG_REQUIRE_SEPERATED_BUILD_DIR=[y/n/1/0/yes/no/true/false]
+PKG_NO_CLEANUP=[y/n/1/0/yes/no/true/false]
+
+### Dynamic vars
+
+PKG_SRC_DIR
+PKG_BUILD_DIR
+PKG_TMP_SRC_FILE
+PKG_TMP_EXTRA_FILES
+PKG_TMP_LOG_FILE
+
+### Functions
+
+pkg_patch_pre()
+pkg_patch()
+pkg_patch_post()
+pkg_configure_pre()
+pkg_configure()
+pkg_configure_post()
+pkg_build_pre()
+pkg_build()
+pkg_build_post()
+pkg_install_pre()
+pkg_install()
+pkg_install_post()

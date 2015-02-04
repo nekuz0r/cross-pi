@@ -1,0 +1,13 @@
+#!/bin/bash
+
+PKG_NAME=gcc-4.9.2
+
+PKG_REQUIRE_SEPERATED_BUILD_DIR=true
+
+pkg_build() {
+  make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+  make install
+}

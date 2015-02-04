@@ -1,18 +1,30 @@
 #!/bin/bash
 
 PKG_NAME=ncurses-5.9
-PKG_SRC_URL=http://ftp.gnu.org/gnu//ncurses/${PKG_NAME}.tar.gz
+PKG_URL=http://ftp.gnu.org/gnu/ncurses/${PKG_NAME}.tar.gz
 
-crosspi_configure() {
-	$PKG_SRC_DIR/configure --build=$CROSSPI_BUILD --host=$CROSSPI_HOST --target=$CROSSPI_TARGET --prefix=/usr --mandir=/usr/share/man --with-shared --without-debug --enable-pc-files --enable-widec --with-build-cc="gcc -D_GNU_SOURCE"
+pkg_configure() {
+	$PKG_SRC_DIR/configure	--build=$CROSSPI_BUILD \
+													--host=$CROSSPI_HOST \
+													--target=$CROSSPI_TARGET \
+													--prefix=/usr \
+													--mandir=/usr/share/man \
+													--with-shared \
+													--without-debug \
+													--enable-pc-files \
+													--enable-widec \
+													--with-build-cc="gcc -D_GNU_SOURCE"
 }
 
-crosspi_make() {
+pkg_make() {
 	make
 }
 
-crosspi_install() {
+pkg_install() {
 	make install
+}
+
+pkg_install_post() {
 	mv -v $CROSSPI_TARGET_DIR/usr/lib/libncursesw.so.5* $CROSSPI_TARGET_DIR/lib
 	ln -sfv ../../lib/$(readlink $CROSSPI_TARGET_DIR/usr/lib/libncursesw.so) $CROSSPI_TARGET_DIR/usr/lib/libncursesw.so
 	for lib in ncurses form panel menu ; do

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+PKG_NAME=rpi-3.18.y
+PKG_URL=https://github.com/raspberrypi/linux/archive/${PKG_NAME}.tar.gz
+PKG_EXTRACTED_DIRNAME=linux-rpi-3.18.y
+
+pkg_install() {
+  make ARCH=${CROSSPI_TARGET_ARCH} INSTALL_HDR_PATH=${CROSSPI_SYSROOT_DIR}/usr headers_install
+}

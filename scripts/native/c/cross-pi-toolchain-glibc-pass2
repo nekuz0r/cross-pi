@@ -1,0 +1,13 @@
+#!/bin/bash
+
+PKG_NAME=glibc-2.20
+
+PKG_REQUIRE_SEPERATED_BUILD_DIR=true
+
+pkg_build() {
+  DESTDIR=${CROSSPI_SYSROOT_DIR} make install_root=${CROSSPI_SYSROOT_DIR} -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+  DESTDIR=${CROSSPI_SYSROOT_DIR} make install_root=${CROSSPI_SYSROOT_DIR} install
+}

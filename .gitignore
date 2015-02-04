@@ -1,6 +1,8 @@
 host/*
-sources/*
 sysroot/*
 target/*
 tools/*
-rootfs.tar.gz
+toolchain/*
+old/*
+home/*
+emulator/*

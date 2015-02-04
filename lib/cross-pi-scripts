@@ -1,0 +1,26 @@
+#!/bin/bash
+
+crosspi_search_script() {
+  if [ ! -z ${2} ]; then
+    RESULTS=$(basename -a $(find ${CROSSPI_HOME}/scripts/${1} | sed "s|${CROSSPI_HOME}/scripts/${1}\(/.\)\?||" | xargs) | grep -i "${2}")
+		if [ ! -z "${RESULTS}" ]; then
+			echo ${RESULTS}
+		fi
+  fi
+}
+
+crosspi_search_native_script() {
+  crosspi_search_script "native" ${1}
+}
+
+crosspi_search_cross_script() {
+  crosspi_search_script "cross" ${1}
+}
+
+crosspi_run_native_script() {
+  crosspi_run_in_native_shell ${CROSSPI_HOME}/bin/cross-pi-run-script ${1}
+}
+
+crosspi_run_cross_script() {
+  crosspi_run_in_cross_shell ${CROSSPI_HOME}/bin/cross-pi-run-script ${1}
+}

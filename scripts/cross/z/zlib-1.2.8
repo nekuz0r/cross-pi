@@ -1,18 +1,21 @@
 #!/bin/bash
 
 PKG_NAME=zlib-1.2.8
-PKG_SRC_URL=http://www.zlib.net/${PKG_NAME}.tar.xz
+PKG_URL=http://www.zlib.net/${PKG_NAME}.tar.xz
 
-crosspi_configure() {
+pkg_configure() {
 	$PKG_SRC_DIR/configure --prefix=/usr
 }
 
-crosspi_build() {
+pkg_build() {
 	make
 }
 
-crosspi_install() {
+pkg_install() {
 	make install
+}
+
+pkg_install_post() {
 	mkdir -pv ${CROSSPI_TARGET_DIR}/lib
 	mv -v ${CROSSPI_TARGET_DIR}/usr/lib/libz.so.* ${CROSSPI_TARGET_DIR}/lib
 	ln -sfv ../../lib/$(readlink ${CROSSPI_TARGET_DIR}/usr/lib/libz.so) ${CROSSPI_TARGET_DIR}/usr/lib/libz.so

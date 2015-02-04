@@ -1,5 +1,7 @@
 #!/bin/bash
 
+exit 0 # This script needs update !!
+
 ZONE=${1}
 if [ -z "${ZONE}" ]; then
   log_warning_msg "No zone specified, defaulting to Europe/Brussels !"
@@ -7,10 +9,10 @@ if [ -z "${ZONE}" ]; then
 fi
 
 PKG_NAME=glibc-2.20
-PKG_SRC_URL=http://ftp.gnu.org/gnu/glibc/${PKG_NAME}.tar.xz
+PKG_URL=http://ftp.gnu.org/gnu/glibc/${PKG_NAME}.tar.xz
 
-EXTRA_DOWNLOADS[0]=http://www.linuxfromscratch.org/patches/lfs/7.6/${PKG_NAME}-fhs-1.patch
-EXTRA_DOWNLOADS[1]=http://www.iana.org/time-zones/repository/releases/tzdata2014j.tar.gz
+PKG_EXTRA_URLS[0]=http://www.linuxfromscratch.org/patches/lfs/7.6/${PKG_NAME}-fhs-1.patch
+PKG_EXTRA_URLS[1]=http://www.iana.org/time-zones/repository/releases/tzdata2014j.tar.gz
 
 build_external
 

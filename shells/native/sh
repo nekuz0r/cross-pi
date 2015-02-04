@@ -1,12 +1,16 @@
 #!/bin/bash
 
+PATH="$CROSSPI_TOOLCHAIN_DIR/usr/bin:$CROSSPI_HOST_DIR/bin:$CROSSPI_HOST_DIR/usr/bin:$CROSSPI_HOST_DIR/usr/local/bin:$PATH"
+LD_LIBRARY_PATH="$CROSSPI_HOST_DIR/lib:$CROSSPI_HOST_DIR/usr/lib:$CROSSPI_HOST_DIR/usr/local/lib:$LD_LIBRARY_PATH"
+
 /usr/bin/env \
-	PATH=$CROSSPI_HOST_DIR/bin:$CROSSPI_HOST_DIR/usr/bin:$CROSSPI_HOST_DIR/usr/local/bin:$PATH \
-	LD_LIBRARY_PATH=$CROSSPI_HOST_DIR/lib:$CROSSPI_HOST_DIR/usr/lib:$CROSSPI_HOST_DIR/usr/local/lib:$LD_LIBRARY_PATH \
+	PATH=${PATH%:} \
+	LD_LIBRARY_PATH=${LD_LIBRARY_PATH%:} \
+	HOME=${CROSSPI_HOME}/home/${CROSSPI_SHELL} \
 	ACLOCAL_FLAGS="-I $CROSSPI_HOST_DIR/share/aclocal" \
 	PKG_CONFIG_LIBDIR="" \
 	PKG_CONFIG_PATH="$CROSSPI_HOST_DIR/lib/pkgconfig:$CROSSPI_HOST_DIR/usr/lib/pkgconfig:$CROSSPI_HOST_DIR/usr/local/lib/pkgconfig" \
-        CPPFLAGS="-I$CROSSPI_HOST_DIR/include -I$CROSSPI_HOST_DIR/usr/include -I$CROSSPI_HOST_DIR/usr/local/include" \
-        LDFLAGS="-L$CROSSPI_HOST_DIR/lib -L$CROSSPI_HOST_DIR/usr/lib -L$CROSSPI_HOST_DIR/usr/local/lib" \
-        \
+  CPPFLAGS="-I$CROSSPI_HOST_DIR/include -I$CROSSPI_HOST_DIR/usr/include -I$CROSSPI_HOST_DIR/usr/local/include" \
+  LDFLAGS="-L$CROSSPI_HOST_DIR/lib -L$CROSSPI_HOST_DIR/usr/lib -L$CROSSPI_HOST_DIR/usr/local/lib" \
+  \
 	/bin/bash --noprofile --rcfile $CROSSPI_HOME/shells/$CROSSPI_SHELL/bashrc +h $@

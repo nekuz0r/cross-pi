@@ -1,77 +1,46 @@
 #!/bin/bash
 
-get_self_directory() {
+get_home_directory() {
 	SOURCE="${BASH_SOURCE[0]}"
-	while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
-  		DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-  		SOURCE="$(readlink "$SOURCE")"
-  		[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+	while [ -h "${SOURCE}" ]; do
+  		DIR="$( cd -P "$( dirname "${SOURCE}" )" && pwd )"
+  		SOURCE="$(readlink "${SOURCE}")"
+  		[[ $SOURCE != /* ]] && SOURCE="${DIR}/${SOURCE}"
 	done
-	DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+	DIR="$( cd -P "$( dirname "${SOURCE}" )" && pwd )"
 
-	echo $DIR
+	echo ${DIR}
 }
 
-CROSSPI_HOME=$(get_self_directory)
 
-. $CROSSPI_HOME/lib/console-functions
-. $CROSSPI_HOME/lib/cross-pi-utils
-. $CROSSPI_HOME/lib/cross-pi-rpi-tools
+CROSSPI_HOME=$(get_home_directory)
 
-check_user_not_root() {
-	if [ "$(id -u)" = "0" ]; then
-		echo -e "${FAILURE}Error:${NORMAL} This action cannot be run as root !" 1>&2
-		exit 1
-	fi
-}
+. ${CROSSPI_HOME}/lib/console
+. ${CROSSPI_HOME}/lib/utils
+. ${CROSSPI_HOME}/lib/cross-pi-utils
+. ${CROSSPI_HOME}/lib/cross-pi-shells
+. ${CROSSPI_HOME}/lib/cross-pi-scripts
 
-check_inception() {
-	if [ ! -z "$CROSSPI_SHELL" ]; then
-		echo -e "${FAILURE}Error:${NORMAL} No cross-piception !" 1>&2
-		exit 1
-	fi
-}
-
-check_inception
-
-export_env
-
-sanity_check() {
-	return 0
-}
-
-run_shell() {
-	export CROSSPI_SHELL=$1
-	shift 1
-	exec $CROSSPI_HOME/shells/$CROSSPI_SHELL/sh $@
-}
-
-search_script() {
-	if [ ! -z "${2}" ]; then
-		RESULTS=$(basename -a $(find ${CROSSPI_HOME}/scripts/${1} | sed "s|${CROSSPI_HOME}/scripts/${1}\(/.\)\?||" | xargs) | grep -i "${2}")
-		if [ ! -z "${RESULTS}" ]; then
-			echo ${RESULTS}
-		fi
-	fi
-}
+crosspi_set_env
+crosspi_check_root
+crosspi_check_inception
 
 case "$1" in
 	init)
-		download_raspberrypi_tools
+		exec ${CROSSPI_HOME}/bin/cross-pi-build-toolchain
 		;;
 	update)
-		update_raspberrypi_tools
 		;;
 	native)
 		case "$2" in
 			shell)
-				run_shell $1
+				crosspi_open_native_shell
 				;;
 			install)
-				run_shell $1 $CROSSPI_HOME/lib/cross-pi-run-install-script ${@:3}
+				crosspi_run_native_script $3
 				;;
 			search)
-				search_script $1 $3
+				crosspi_search_native_script $3
 				;;
 			*)
 				;;
@@ -80,13 +49,13 @@ case "$1" in
 	cross)
 		case "$2" in
 			shell)
-				run_shell $1
+				crosspi_open_cross_shell
 				;;
 			install)
-				run_shell $1 $CROSSPI_HOME/lib/cross-pi-run-install-script ${@:3}
+				crosspi_run_cross_script $3
 				;;
 			search)
-				search_script $1 $3
+				crosspi_search_cross_script $3
 				;;
 			*)
 				;;
@@ -109,9 +78,9 @@ case "$1" in
 		evaluate_retval
 		;;
 	sysroot)
-		log_info_msg "Creating basic sysroot..."
-		$CROSSPI_HOME/make-sysroot.sh $CROSSPI_HOME
-		evaluate_retval
+		;;
+	chroot-target)
+		sudo chroot ${CROSSPI_TARGET_DIR} /usr/bin/env -i HOME=/root TERM="$TERM" PS1='[chroot] \u:\w\$ ' PATH=/bin:/usr/bin:/sbin:/usr/sbin /bin/sh --login
 		;;
 	*)
 		echo "Usage: $0 {init|update|native|cross|clean|save|restore|install|uninstall}"

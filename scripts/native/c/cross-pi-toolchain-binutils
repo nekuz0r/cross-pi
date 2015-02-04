@@ -1,0 +1,24 @@
+#!/bin/bash
+
+PKG_NAME=binutils-2.24
+PKG_URL=http://ftpmirror.gnu.org/binutils/${PKG_NAME}.tar.gz
+PKG_REQUIRE_SEPERATED_BUILD_DIR=true
+
+pkg_configure() {
+  $PKG_SRC_DIR/configure  --prefix=${CROSSPI_TOOLCHAIN_DIR}/usr \
+                          --build=${CROSSPI_BUILD} \
+                          --host=${CROSSPI_BUILD} \
+                          --target=${CROSSPI_TARGET} \
+                          --with-sysroot=${CROSSPI_SYSROOT_DIR} \
+                          --disable-multilib \
+                          --disable-nls \
+                          --enable-shared
+}
+
+pkg_build() {
+  make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+  make install
+}

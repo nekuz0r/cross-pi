@@ -1,16 +1,16 @@
 #!/bin/bash
 
 PKG_NAME=busybox-1.23.1
-PKG_SRC_URL=http://www.busybox.net/downloads/${PKG_NAME}.tar.bz2
+PKG_URL=http://www.busybox.net/downloads/${PKG_NAME}.tar.bz2
 
-crosspi_configure() {
+pkg_configure() {
 	make defconfig
 }
 
-crosspi_build() {
+pkg_build() {
 	make
 }
 
-crosspi_install() {
-	make install CONFIG_PREFIX=$CROSSPI_TARGET_DIR
+pkg_install() {
+	make install CONFIG_PREFIX=${CROSSPI_TARGET_DIR}
 }

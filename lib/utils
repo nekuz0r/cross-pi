@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# is_function [FUNC]
+# Returns true if FUNC exists and is a function otherwise false
+is_function() {
+  declare -Ff "$1" &> /dev/null
+}
+
+# is_root
+# Returns true if the current user is root otherwise false
+user_is_root() {
+  [[ "$EUID" -eq 0 ]]
+}
+
+build_get_arch_long() {
+  gcc -dumpmachine
+}
+
+build_get_arch_short() {
+  uname -m
+}
+
+build_is_x64() {
+  [[ $(build_get_arch) = 'x86_64' ]]
+}
+
+host_get_arch_long() {
+  echo 'arm-linux-gnueabihf'
+}
+
+host_get_arch_short() {
+  local host_arch_long=$(host_get_arch_long)
+  local tokens=(${host_arch_long//-/ })
+  echo ${tokens[0]}
+}
+
+target_get_arch_long() {
+  echo 'arm-linux-gnueabihf'
+}
+
+target_get_arch_short() {
+  local target_arch_long=$(host_get_arch_long)
+  local tokens=(${target_arch_long//-/ })
+  echo ${tokens[0]}
+}
+
+cpu_count() {
+  local COUNT=$(nproc 2>/dev/null)
+  if [ -z ${COUNT} ]; then
+    COUNT=$(grep -c processor /proc/cpuinfo 2>/dev/null)
+  fi
+  echo ${COUNT:-1}
+}
+
+is_true() {
+  [ "${1}" = "1" ] || [ "${1}" = "yes" ] || [ "${1}" = "true" ] ||  [ "${1}" = "y" ]
+}
+
+if_false() {
+  [ "${1}" = "0" ] || [ "${1}" = "no" ] || [ "${1}" = "false" ] ||  [ "${1}" = "n" ]
+}

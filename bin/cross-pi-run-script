@@ -1,0 +1,41 @@
+#!/bin/bash
+
+. ${CROSSPI_HOME}/lib/console
+. ${CROSSPI_HOME}/lib/utils
+. ${CROSSPI_HOME}/lib/cross-pi-utils
+. ${CROSSPI_HOME}/lib/cross-pi-pkg-utils
+. ${CROSSPI_HOME}/lib/cross-pi-script-utils
+
+SCRIPT_NAME=${1}
+SCRIPT_PATH=$(crosspi_script_path ${SCRIPT_NAME})
+
+if [ ! -f ${SCRIPT_PATH} ]; then
+  log_failure_msg "Script ${SCRIPT_NAME} not found !"
+  exit 1
+fi
+
+. ${SCRIPT_PATH}
+
+trap crosspi_pkg_cleanup EXIT
+
+crosspi_pkg_set_env
+
+crosspi_pkg_clear_log
+crosspi_pkg_download
+crosspi_pkg_extract
+crosspi_pkg_enter_src_directory
+crosspi_pkg_call_func pkg_patch_pre
+crosspi_pkg_call_func pkg_patch
+crosspi_pkg_call_func pkg_patch_post
+crosspi_pkg_enter_build_directory
+crosspi_pkg_call_func pkg_configure_pre
+crosspi_pkg_call_func pkg_configure
+crosspi_pkg_call_func pkg_configure_post
+crosspi_pkg_call_func pkg_build_pre
+crosspi_pkg_call_func pkg_build
+crosspi_pkg_call_func pkg_build_post
+crosspi_pkg_call_func pkg_install_pre
+crosspi_pkg_call_func pkg_install
+crosspi_pkg_call_func pkg_install_post
+
+exit 0

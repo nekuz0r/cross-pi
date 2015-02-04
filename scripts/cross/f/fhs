@@ -2,7 +2,7 @@
 
 PKG_NAME=fhs
 
-crosspi_install() {
+pkg_install() {
   mkdir -pv ${CROSSPI_TARGET_DIR}/{bin,boot,etc/{opt,sysconfig},home,lib,mnt,opt}
   mkdir -pv ${CROSSPI_TARGET_DIR}/{media/{floppy,cdrom},sbin,srv,var}
   install -dv -m 0750 ${CROSSPI_TARGET_DIR}/root

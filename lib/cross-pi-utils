@@ -1,54 +1,76 @@
 #!/bin/bash
 
-export_env() {
-	export CROSSPI_HOME=$CROSSPI_HOME
-	export CROSSPI_HOST_DIR=$CROSSPI_HOME/host
-	export CROSSPI_SYSROOT_DIR=$CROSSPI_HOME/sysroot
-	export CROSSPI_TARGET_DIR=$CROSSPI_HOME/target
-	export CROSSPI_SOURCES_DIR=$CROSSPI_HOME/sources
-	export CROSSPI_TOOLS_DIR=$CROSSPI_HOME/tools
-
-	if [ build_is_x64 ]; then
-		TOOLCHAIN_SUFFIX="-x64"
-	fi
-	export CROSSPI_TOOLCHAIN=$CROSSPI_TOOLS_DIR/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian$TOOLCHAIN_SUFFIX
-
-	export CROSSPI_BUILD=$(build_get_name)
-        export CROSSPI_BUILD_ARCH=$(build_get_arch)
-        export CROSSPI_HOST=$(host_get_name)
-        export CROSSPI_HOST_ARCH=$(host_get_arch)
-        export CROSSPI_TARGET=$(target_get_name)
-        export CROSSPI_TARGET_ARCH=$(target_get_arch)
+crosspi_set_env() {
+  export CROSSPI_VERSION=0.1.0
+  
+  export CROSSPI_HOME=${CROSSPI_HOME}
+  export CROSSPI_HOST_DIR=${CROSSPI_HOME}/host
+  export CROSSPI_TOOLCHAIN_DIR=${CROSSPI_HOME}/toolchain
+  export CROSSPI_SYSROOT_DIR=${CROSSPI_HOME}/sysroot
+  export CROSSPI_TARGET_DIR=${CROSSPI_HOME}/target
+  export CROSSPI_ROOTFS_DIR=${CROSSPI_HOME}/rootfs
+  
+  export CROSSPI_TMP_DIR=/tmp/cross-pi
+  export CROSSPI_TMP_DOWNLOAD_DIR=${CROSSPI_TMP_DIR}/download
+  export CROSSPI_TMP_BUILD_DIR=${CROSSPI_TMP_DIR}/build
+  export CROSSPI_TMP_LOG_DIR=${CROSSPI_TMP_DIR}/log
+  
+  export CROSSPI_BUILD=$(build_get_arch_long)
+  export CROSSPI_BUILD_ARCH=$(build_get_arch_short)
+  export CROSSPI_HOST=$(host_get_arch_long)
+  export CROSSPI_HOST_ARCH=$(host_get_arch_short)
+  export CROSSPI_TARGET=$(target_get_arch_long)
+  export CROSSPI_TARGET_ARCH=$(target_get_arch_short)
+  
+  export CROSSPI_BUILD_NPROC=$(cpu_count)
 }
 
-build_get_arch() {
-	echo $(uname -m)
+crosspi_check_inception() {
+  if [ ! -z ${CROSSPI_SHELL} ]; then
+    echo -e "${FAILURE}Error:${NORMAL} No cross-piception !" 1>&2
+    exit 1
+  fi
 }
 
-build_get_name() {
-	echo $(gcc -dumpmachine)
+crosspi_check_root() {
+  if user_is_root; then
+    echo -e "${FAILURE}Error:${NORMAL} This action cannot be run as root !" 1>&2
+    exit 1
+  fi
 }
 
-build_is_x64() {
-	MACHINE_TYPE=$(build_get_arch)
-	if [ ${MACHINE_TYPE} == '86_64' ]; then
-		return 1
-	fi
-	return 0
+crosspi_mkdir_tmp() {
+  mkdir -p ${CROSSPI_TMP_DIR}/{download,log,build} &> /dev/null
 }
 
-host_get_arch() {
-	echo $(host_get_name | cut -d'-' -f1)
+crosspi_mkdir_sysroot() {
+  mkdir -p ${CROSSPI_SYSROOT_DIR} &> /dev/null
 }
 
-host_get_name() {
-	echo "arm-linux-gnueabihf"
+crosspi_mkdir_toolchain() {
+  mkdir -p ${CROSSPI_TOOLCHAIN_DIR} &> /dev/null
 }
 
-target_get_arch() {
-	echo $(host_get_arch)
+crosspi_mkdir_target() {
+  mkdir -p ${CROSSPI_TARGET_DIR} &> /dev/null
 }
 
-target_get_name() {
-	echo $(host_get_name)
+crosspi_mkdir_host() {
+  mkdir -p ${CROSSPI_HOST_DIR} &> /dev/null
+}
+
+crosspi_mkdir_rootfs() {
+  mkdir -p ${CROSSPI_ROOTFS_DIR} &> /dev/null
+}
+
+crosspi_download_file() {
+  local FILENAME=$(basename ${1})
+  wget ${1} -O ${CROSSPI_TMP_DOWNLOAD_DIR}/${FILENAME} -q &> /dev/null
+}
+
+crosspi_download_files() {
+  for URL in ${@}
+  do
+    crosspi_download_file ${URL}
+  done
 }
