@@ -77,20 +77,20 @@ crosspi_pkg_clear_log() {
 }
 
 crosspi_pkg_cleanup() {
+  log_info_msg "Cleaning..."
+  if [ ! -z ${PKG_URL} ]; then
+    rm -f ${PKG_TMP_SRC_FILE} &>> ${PKG_TMP_LOG_FILE}
+  fi
+
+  if [ ! -z "${PKG_EXTRA_URLS[*]}" ]; then
+    rm -f ${PKG_TMP_EXTRA_FILES[*]} &>> ${PKG_TMP_LOG_FILE}
+  fi
+
   if ! is_true ${PKG_NO_CLEANUP}; then
-    log_info_msg "Cleaning..."
-    if [ ! -z ${PKG_URL} ]; then
-      rm -f ${PKG_TMP_SRC_FILE} &>> ${PKG_TMP_LOG_FILE}
-    fi
-    
-    if [ ! -z "${PKG_EXTRA_URLS[*]}" ]; then
-      rm -f ${PKG_TMP_EXTRA_FILES[*]} &>> ${PKG_TMP_LOG_FILE}
-    fi
-    
     rm -Rf ${PKG_SRC_DIR} &>> ${PKG_TMP_LOG_FILE}
     rm -Rf ${PKG_BUILD_DIR} &>> ${PKG_TMP_LOG_FILE}
-    log_success_msg
   fi
+  log_success_msg
 }
 
 crosspi_pkg_enter_src_directory() {
