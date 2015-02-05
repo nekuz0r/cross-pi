@@ -15,6 +15,7 @@ pkg_configure() {
                                                           --disable-multilib \
                                                           --disable-profile \
                                                           --enable-kernel=2.6.32 \
+							  --enable-obsolete-rpc \
                                                           libc_cv_forced_unwind=yes
 }
 
