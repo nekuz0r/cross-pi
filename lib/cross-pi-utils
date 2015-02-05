@@ -25,6 +25,12 @@ crosspi_set_env() {
   export CROSSPI_BUILD_NPROC=$(cpu_count)
 }
 
+crosspi_read_config() {
+  if [ -f ${CROSSPI_HOME}/.crosspi_config ]; then
+    . ${CROSSPI_HOME}/.crosspi_config
+  fi
+}
+
 crosspi_check_inception() {
   if [ ! -z ${CROSSPI_SHELL} ]; then
     echo -e "${FAILURE}Error:${NORMAL} No cross-piception !" 1>&2
