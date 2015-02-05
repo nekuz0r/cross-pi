@@ -16,7 +16,17 @@ fi
 
 . ${SCRIPT_PATH}
 
-trap crosspi_pkg_cleanup EXIT
+on_exit() {
+  crosspi_pkg_cleanup
+  echo -e "${INFO}${BMPREFIX}Script executed in $SECONDS seconds.${NORMAL}"
+}
+
+on_start() {
+  echo -e "${INFO}${BMPREFIX}Running script ${SCRIPT_NAME}...${NORMAL}"
+}
+
+on_start
+trap on_exit EXIT
 
 crosspi_pkg_set_env
 
