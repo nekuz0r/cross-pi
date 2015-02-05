@@ -59,3 +59,13 @@ is_true() {
 if_false() {
   [ "${1}" = "0" ] || [ "${1}" = "no" ] || [ "${1}" = "false" ] ||  [ "${1}" = "n" ]
 }
+
+run_as_root() {
+  if [ "$EUID" -eq 0 ]; then
+    $*
+  else if [ -x "/usr/bin/sudo" ]; then
+    sudo $*
+  else
+    su -c \\"$*\\"
+  fi
+}
