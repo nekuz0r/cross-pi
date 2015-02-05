@@ -63,7 +63,7 @@ if_false() {
 run_as_root() {
   if [ "$EUID" -eq 0 ]; then
     $*
-  else if [ -x "/usr/bin/sudo" ]; then
+  elif [ -x "/usr/bin/sudo" ]; then
     sudo $*
   else
     su -c \\"$*\\"
