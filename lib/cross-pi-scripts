@@ -2,7 +2,7 @@
 
 crosspi_search_script() {
   if [ ! -z ${2} ]; then
-    RESULTS=$(basename -a $(find ${CROSSPI_HOME}/scripts/${1} | sed "s|${CROSSPI_HOME}/scripts/${1}\(/.\)\?||" | xargs) | grep -i "${2}")
+    RESULTS=$(basename -a $(find ${CROSSPI_HOME}/scripts/${1} -type f | sort | xargs) | grep -i "${2}")
 		if [ ! -z "${RESULTS}" ]; then
 			echo ${RESULTS}
 		fi
