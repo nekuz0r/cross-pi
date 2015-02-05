@@ -1,15 +1,16 @@
 #!/bin/bash
 
+. ${CROSSPI_HOME}/lib/cross-pi-utils
 . ${CROSSPI_HOME}/lib/cross-pi-shells
 . ${CROSSPI_HOME}/lib/cross-pi-scripts
 
 crosspi_mkdir_toolchain
 crosspi_mkdir_sysroot
 
-crosspi_run_native_script cross-pi-toolchain-binutils
-crosspi_run_native_script cross-pi-toolchain-kernel-headers
-crosspi_run_native_script cross-pi-toolchain-gcc-pass1
-crosspi_run_native_script cross-pi-toolchain-glibc-pass1
-crosspi_run_native_script cross-pi-toolchain-libgcc
-crosspi_run_native_script cross-pi-toolchain-glibc-pass2
-crosspi_run_native_script cross-pi-toolchain-gcc-pass2
+cross-pi native install cross-pi-toolchain-binutils
+cross-pi native install cross-pi-toolchain-kernel-headers
+cross-pi native install cross-pi-toolchain-gcc-pass1
+cross-pi native install cross-pi-toolchain-glibc-pass1
+cross-pi native install cross-pi-toolchain-libgcc
+cross-pi native install cross-pi-toolchain-glibc-pass2
+cross-pi native install cross-pi-toolchain-gcc-pass2
