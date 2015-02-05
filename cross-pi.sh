@@ -22,6 +22,7 @@ CROSSPI_HOME=$(get_home_directory)
 . ${CROSSPI_HOME}/lib/cross-pi-scripts
 
 crosspi_set_env
+crosspi_read_config
 crosspi_check_root
 crosspi_check_inception
 
@@ -33,31 +34,34 @@ case "$1" in
 		;;
 	native)
 		case "$2" in
-			shell)
-				crosspi_open_native_shell
-				;;
 			install)
 				crosspi_run_native_script $3
 				;;
 			search)
 				crosspi_search_native_script $3
 				;;
-			*)
+			shell|*)
+				crosspi_open_native_shell
 				;;
 		esac
 		;;
 	cross)
 		case "$2" in
-			shell)
-				crosspi_open_cross_shell
-				;;
 			install)
 				crosspi_run_cross_script $3
 				;;
 			search)
 				crosspi_search_cross_script $3
 				;;
-			*)
+			shell|*)
+				crosspi_open_cross_shell
+				;;
+		esac
+		;;
+	chroot)
+		case "$2" in
+			shell|*)
+				#sudo chroot ${CROSSPI_TARGET_DIR} /usr/bin/env -i HOME=/root TERM="$TERM" PS1='[chroot] \u:\w\$ ' PATH=/bin:/usr/bin:/sbin:/usr/sbin /bin/sh --login
 				;;
 		esac
 		;;
@@ -68,19 +72,14 @@ case "$1" in
 	restore)
 		;;
 	install)
-		log_info_msg "Installing Cross-PI..."
+		log_info_msg "Installing Cross-Pi..."
 		ln -sf $CROSSPI_HOME/cross-pi.sh /usr/local/bin/cross-pi &> /dev/null
 		evaluate_retval
 		;;
 	uninstall)
-		log_info_msg "Uninstall Cross-PI..."
+		log_info_msg "Uninstall Cross-Pi..."
 		rm -f /usr/local/bin/cross-pi &> /dev/null
 		evaluate_retval
-		;;
-	sysroot)
-		;;
-	chroot-target)
-		sudo chroot ${CROSSPI_TARGET_DIR} /usr/bin/env -i HOME=/root TERM="$TERM" PS1='[chroot] \u:\w\$ ' PATH=/bin:/usr/bin:/sbin:/usr/sbin /bin/sh --login
 		;;
 	*)
 		echo "Usage: $0 {init|update|native|cross|clean|save|restore|install|uninstall}"
