@@ -8,6 +8,7 @@ pkg_configure() {
 													--host=$CROSSPI_HOST \
 													--target=$CROSSPI_TARGET \
 													--prefix=/usr \
+													--with-sysroot=$CROSSPI_TARGET_DIR \
 													--mandir=/usr/share/man \
 													--with-shared \
 													--without-debug \

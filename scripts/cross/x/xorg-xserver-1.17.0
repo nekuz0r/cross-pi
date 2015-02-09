@@ -13,7 +13,9 @@ pkg_configure() {
 					--enable-install-setuid \
 					--enable-suid-wrapper \
 					--disable-glx \
-					--disable-dri
+					--disable-dri \
+					--sysconfdir=/etc \
+					--localstatedir=/var
 }
 
 pkg_build() {
