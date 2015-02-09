@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. ${CROSSPI_HOME}/lib/cross-pi-chroot-utils
+
+chroot "${CROSSPI_ROOTFS_DIR}" /usr/bin/env -i \
+	PATH="/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin" \
+	HOME="/root" \
+	PS1="\[\033[0;33m\][${CROSSPI_SHELL} ${CROSSPI_TARGET_ARCH^^}]\[\033[00m\] \w\$ " \
+	\
+	/bin/bash --login +h
