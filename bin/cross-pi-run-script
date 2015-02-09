@@ -10,8 +10,13 @@ SCRIPT_NAME=${1}
 SCRIPT_PATH=$(crosspi_script_path ${SCRIPT_NAME})
 
 if [ ! -f ${SCRIPT_PATH} ]; then
-  log_failure_msg "Script ${SCRIPT_NAME} not found !"
-  exit 1
+  RESULTS=$(basename -a $(find ${CROSSPI_HOME}/scripts/${CROSSPI_SHELL}/${SCRIPT_NAME:0:1}/ -iname "${SCRIPT_NAME}-*" -print | sort -r | xargs))
+  SCRIPT_NAME=${RESULTS[0]}
+  SCRIPT_PATH=$(crosspi_script_path ${SCRIPT_NAME})
+  if [ ! -f ${SCRIPT_PATH} ]; then
+    log_failure_msg "Script ${1} not found !"
+    exit 1
+  fi
 fi
 
 . ${SCRIPT_PATH}
