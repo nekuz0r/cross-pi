@@ -14,3 +14,4 @@ cross-pi native install cross-pi-toolchain-glibc-pass1
 cross-pi native install cross-pi-toolchain-libgcc
 cross-pi native install cross-pi-toolchain-glibc-pass2
 cross-pi native install cross-pi-toolchain-gcc-pass2
+cross-pi native install cross-pi-toolchain-libtool
