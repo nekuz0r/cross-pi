@@ -6,3 +6,5 @@ toolchain/*
 old/*
 home/*
 emulator/*
+rootfs/*
+rootfs.tar.gz

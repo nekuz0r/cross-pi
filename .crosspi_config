@@ -1,0 +1,5 @@
+# Override cross-compiler sysroot
+# Useful if your target directory contains libc & kernel headers
+# CROSSPI_SYSROOT_DIR=${CROSSPI_HOME}/target
+
+LC_CTYPE="en_US.UTF-8"
