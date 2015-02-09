@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=libtool-2.4.5
+PKG_URL=http://ftpmirror.gnu.org/libtool/${PKG_NAME}.tar.gz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure --prefix=/usr --build=${CROSSPI_BUILD} --host=${CROSSPI_TARGET} --target=${CROSSPI_TARGET}
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=xf86bigfontproto-1.2.0
+PKG_URL=http://xorg.freedesktop.org/releases/individual/proto/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure 	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--target=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR}
+}
+
+pkg_install() {
+	make install
+}

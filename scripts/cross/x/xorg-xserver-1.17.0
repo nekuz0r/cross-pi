@@ -1,0 +1,25 @@
+#!/bin/bash
+
+PKG_NAME=xorg-server-1.17.0
+PKG_URL=http://xorg.freedesktop.org/archive/individual/xserver/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure 	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--with-xkb-output=/var/lib/xkb \
+					--enable-dmx \
+					--enable-install-setuid \
+					--enable-suid-wrapper \
+					--disable-glx \
+					--disable-dri
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

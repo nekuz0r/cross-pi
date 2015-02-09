@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=autoconf-2.69
+PKG_URL=http://ftp.gnu.org/gnu/autoconf/${PKG_NAME}.tar.xz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure --prefix=${CROSSPI_HOST_DIR}/usr
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_DIR}
+}
+
+pkg_install() {
+	make install
+}

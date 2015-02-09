@@ -1,0 +1,21 @@
+#!/bin/bash
+
+PKG_NAME=libXrender-0.9.8
+PKG_URL=http://xorg.freedesktop.org/releases/individual/lib/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure 	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--target=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+PKG_NAME=perl-5.20.1
+PKG_URL=http://www.cpan.org/src/5.0/${PKG_NAME}.tar.bz2
+
+PKG_EXTRA_URLS[0]=http://www.linuxfromscratch.org/patches/lfs/development/perl-5.20.1-infinite_recurse_fix-1.patch
+
+pkg_patch() {
+	patch -Np1 -i ${PKG_TMP_EXTRA_FILES[0]}
+}
+
+pkg_configure() {
+	export BUILD_ZLIB=False
+	export BUILD_BZIP2=0
+	
+	sh ${PKG_SRC_DIR}/Configure 	-des \
+					-Dprefix=${CROSSPI_HOST_DIR}/usr \
+					-Dvendorprefix=${CROSSPI_HOST_DIR}/usr \
+					-Dman1dir=${CROSSPI_HOST_DIR}/usr/share/man/man1 \
+					-Dman3dir=${CROSSPI_HOST_DIR}/usr/share/man/man3 \
+					-Dpager="/usr/bin/less -isR" \
+					-Duseshrplib
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

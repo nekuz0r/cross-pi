@@ -1,0 +1,31 @@
+#!/bin/bash
+
+PKG_NAME=pixman-0.32.6
+PKG_URL=http://cairographics.org/releases/${PKG_NAME}.tar.gz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--target=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--disable-mmx \
+					--disable-sse2 \
+					--disable-ssse3 \
+					--disable-vmx \
+					--disable-arm-iwmmxt \
+					--disable-arm-iwmmxt2 \
+					--disable-arm-neon \
+					--disable-arm-simd \
+					--disable-mips-dspr2 \
+					--disable-loongson-mmi
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+PKG_NAME=util-macros-1.19.0
+PKG_URL=http://xorg.freedesktop.org/releases/individual/util/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure --prefix=/usr --build=${CROSSPI_BUILD} --host=${CROSSPI_TARGET} --target=${CROSSPI_TARGET} --with-sysroot=${CROSSPI_TARGET_DIR}
+}
+
+pkg_install() {
+	make install
+}

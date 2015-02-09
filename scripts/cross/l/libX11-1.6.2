@@ -1,0 +1,24 @@
+#!/bin/bash
+
+PKG_NAME=libX11-1.6.2
+PKG_URL=http://xorg.freedesktop.org/releases/individual/lib/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+	# We don't want to install X11 on host to be able to build makekeys :)
+	export CPPFLAGS_FOR_BUILD="-I ${CROSSPI_TARGET_DIR}/usr/include"
+	${PKG_SRC_DIR}/configure 	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--target=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--with-keysymdefdir=${CROSSPI_TARGET_DIR}/usr/include/X11 \
+					--disable-static
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

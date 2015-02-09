@@ -4,7 +4,7 @@ PKG_NAME=glib-2.42.1
 PKG_URL=http://ftp.gnome.org/pub/gnome/sources/glib/2.42/glib-2.42.1.tar.xz
 
 pkg_configure() {
-	$PKG_SRC_DIR/configure --prefix=/usr --build=$CROSSPI_BUILD --host=$CROSSPI_HOST --target=$CROSSPI_TARGET \
+	$PKG_SRC_DIR/configure --prefix=/usr --build=$CROSSPI_BUILD --host=$CROSSPI_HOST --target=$CROSSPI_TARGET --with-sysroot=${CROSSPI_TARGET_DIR} \
 	ac_cv_func_posix_getpwuid_r=yes glib_cv_stack_grows=no \
 	glib_cv_uscore=no ac_cv_func_strtod=yes \
 	ac_fsusage_space=yes fu_cv_sys_stat_statfs2_bsize=yes \
@@ -39,7 +39,7 @@ pkg_configure() {
 }
 
 pkg_build() {
-	make
+	make -j${CROSSPI_BUILD_NPROC}
 }
 
 pkg_install() {

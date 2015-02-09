@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PKG_NAME=intltool-0.50.2
+PKG_URL=http://launchpad.net/intltool/trunk/0.50.2/+download/${PKG_NAME}.tar.gz
+
+pkg_configure() {
+	local PERL_VERSION=$(perl -e "print $^V")
+	export PERL5LIB=${CROSSPI_HOST_DIR}/usr/local/lib/perl/${PERL_VERSION:1}
+	${PKG_SRC_DIR}/configure --prefix=${CROSSPI_HOST_DIR}/usr
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

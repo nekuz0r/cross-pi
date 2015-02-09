@@ -10,11 +10,11 @@ pkg_patch() {
 }
 
 pkg_configure() {
-	${PKG_SRC_DIR}/configure --build=${CROSSPI_BUILD} --host=${CROSSPI_HOST} --target=${CROSSPI_TARGET} --prefix=/usr --disable-static
+	${PKG_SRC_DIR}/configure --build=${CROSSPI_BUILD} --host=${CROSSPI_HOST} --target=${CROSSPI_TARGET} --prefix=/usr --disable-static --with-sysroot=${CROSSPI_TARGET_DIR}
 }
 
 pkg_build() {
-	make
+	make -j${CROSSPI_BUILD_NPROC}
 }
 
 pkg_install() {

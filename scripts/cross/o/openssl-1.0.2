@@ -1,0 +1,44 @@
+#!/bin/bash
+
+PKG_NAME=openssl-1.0.2
+PKG_URL=http://openssl.org/source/${PKG_NAME}.tar.gz
+
+pkg_patch() {
+	# disable static libraries
+	sed -i 's# libcrypto.a##;s# libssl.a##' ${PKG_SRC_DIR}/Makefile
+}
+
+pkg_configure() {
+	RANLIB=ranlib \
+	CC=gcc \
+	${PKG_SRC_DIR}/config	--prefix=${CROSSPI_TARGET_DIR}/usr \
+				--openssldir=${CROSSPI_TARGET_DIR}/usr/local/ssl \
+				--libdir=lib \
+				shared \
+				zlib-dynamic \
+				os/compiler:${CROSS_COMPILE}
+}
+
+pkg_build() {
+	make
+}
+
+pkg_install() {
+	make install DESTDIR=""
+}
+
+pkg_install_post() {
+	mkdir -p ${CROSSPI_TMP_DIR}/libcrypto_shared
+	cd ${CROSSPI_TMP_DIR}/libcrypto_shared
+	${AR} -x ${CROSSPI_TARGET_DIR}/usr/lib/libcrypto.a
+	${CC} -shared ${CROSSPI_TMP_DIR}/libcrypto_shared/*.o -o ${CROSSPI_TARGET_DIR}/usr/lib/libcrypto.so
+	cd ${PKG_BUILD_DIR}
+	rm -Rf ${CROSSPI_TMP_DIR}/libcrypto_shared
+
+	mkdir -p ${CROSSPI_TMP_DIR}/libssl_shared
+        cd ${CROSSPI_TMP_DIR}/libssl_shared
+        ${AR} -x ${CROSSPI_TARGET_DIR}/usr/lib/libssl.a
+        ${CC} -shared ${CROSSPI_TMP_DIR}/libssl_shared/*.o -o ${CROSSPI_TARGET_DIR}/usr/lib/libssl.so
+        cd ${PKG_BUILD_DIR}
+        rm -Rf ${CROSSPI_TMP_DIR}/libssl_shared
+}

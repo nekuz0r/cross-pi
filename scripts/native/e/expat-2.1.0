@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=expat-2.1.0
+PKG_URL=http://prdownloads.sourceforge.net/expat/${PKG_NAME}.tar.gz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure --prefix=${CROSSPI_HOST_DIR}/usr
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

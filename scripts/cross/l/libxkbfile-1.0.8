@@ -1,0 +1,26 @@
+#!/bin/bash
+
+PKG_NAME=libxkbfile-1.0.8
+PKG_URL=http://xorg.freedesktop.org/releases/individual/lib/${PKG_NAME}.tar.bz2
+
+pkg_configure_pre() {
+	autoreconf -fiv ${ACLOCAL_FLAGS}
+}
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure 	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--target=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--enable-malloc0returnsnull
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

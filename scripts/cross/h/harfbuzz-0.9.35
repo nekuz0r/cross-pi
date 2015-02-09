@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=harfbuzz-0.9.35
+PKG_URL=http://www.freedesktop.org/software/harfbuzz/release/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure --prefix=/usr --build=${CROSSPI_BUILD} --host=${CROSSPI_TARGET} --target=${CROSSPI_TARGET} --with-gobject --with-sysroot=${CROSSPI_TARGET_DIR}
+}
+
+pkg_build() {
+	make
+}
+
+pkg_install() {
+	make install
+}

@@ -1,16 +1,16 @@
 #!/bin/bash
 
 PKG_NAME=m4-1.4.17
-PKG_SRC_URL=http://ftp.gnu.org/gnu/m4/${PKG_NAME}.tar.xz
+PKG_URL=http://ftp.gnu.org/gnu/m4/${PKG_NAME}.tar.xz
 
-crosspi_configure() {
-	$PKG_SRC_DIR/configure --prefix=$CROSSPI_HOST_DIR
+pkg_configure() {
+	${PKG_SRC_DIR}/configure --prefix=${CROSSPI_HOST_DIR}/usr
 }
 
-crosspi_build() {
+pkg_build() {
 	make
 }
 
-crosspi_install() {
+pkg_install() {
 	make install
 }

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=bison-3.0.4
+PKG_URL=http://ftp.gnu.org/gnu/bison/${PKG_NAME}.tar.xz
+
+pkg_configure() {
+	${PKG_SRD_DIR}/configure --prefix=${CROSSPI_HOST_DIR}/usr
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

@@ -4,7 +4,7 @@ PKG_NAME=libffi-3.2.1
 PKG_URL=ftp://sourceware.org/pub/libffi/${PKG_NAME}.tar.gz
 
 pkg_configure() {
-	${PKG_SRC_DIR}/configure --build=${CROSSPI_BUILD} --host=${CROSSPI_HOST} --target=${CROSSPI_TARGET} --prefix=/usr
+	${PKG_SRC_DIR}/configure --build=${CROSSPI_BUILD} --host=${CROSSPI_HOST} --target=${CROSSPI_TARGET} --prefix=/usr --with-sysroot=${CROSSPI_TARGET_DIR}
 }
 
 pkg_build() {
