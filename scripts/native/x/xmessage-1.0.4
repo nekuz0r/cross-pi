@@ -5,7 +5,7 @@ PKG_URL=http://xorg.freedesktop.org/releases/individual/app/${PKG_NAME}.tar.bz2
 
 pkg_configure() {
   ${PKG_SRC_DIR}/configure --prefix=${CROSSPI_HOST_DIR}/usr \
-        --with-x11-app-defaults=${CROSSPI_HOST_DIR}/etc/app-defaults
+        --with-appdefaultdir=${CROSSPI_HOST_DIR}/etc/app-defaults
 }
 
 pkg_build() {
