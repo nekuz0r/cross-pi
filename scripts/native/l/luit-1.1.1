@@ -3,6 +3,10 @@
 PKG_NAME=bdftopcf-1.0.4
 PKG_URL=http://xorg.freedesktop.org/releases/individual/app/${PKG_NAME}.tar.bz2
 
+pkg_patch() {
+  sed -i -e "s@#ifdef HAVE_CONFIG_H@#ifdef _XOPEN_SOURCE\n#  undef _XOPEN_SOURCE\n#  define _XOPEN_SOURCE 600\n#endif\n\n&@" ${PKG_SRC_DIR}/sys.c
+}
+
 pkg_configure() {
   ${PKG_SRC_DIR}/configure --prefix=${CROSSPI_HOST_DIR}/usr
 }
