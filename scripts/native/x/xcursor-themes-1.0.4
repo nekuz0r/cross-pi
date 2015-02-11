@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=xcursor-themes-1.0.4
+PKG_URL=http://xorg.freedesktop.org/releases/individual/data/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+  ${PKG_SRC_DIR}/configure --prefix=${CROSSPI_HOST_DIR}/usr
+}
+
+pkg_build() {
+  make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+  make install
+}
