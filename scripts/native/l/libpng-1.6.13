@@ -1,0 +1,22 @@
+#!/bin/bash
+
+PKG_NAME=libpng-1.6.13
+PKG_URL=http://downloads.sourceforge.net/libpng/${PKG_NAME}.tar.xz
+
+PKG_EXTRA_URLS[0]=http://downloads.sourceforge.net/libpng-apng/${PKG_NAME}-apng.patch.gz
+
+pkg_patch() {
+	gzip -cd ${PKG_TMP_EXTRA_FILES[0]} | patch -p1
+}
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure --prefix=${CROSSPI_HOST_DIR}/usr --disable-static
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}
