@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PKG_NAME=font-xfree86-type1-1.0.4
+PKG_URL=http://xorg.freedesktop.org/releases/individual/font/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+  ${PKG_SRC_DIR}/configure  --prefix=/usr \
+          --build=${CROSSPI_BUILD} \
+          --host=${CROSSPI_TARGET} \
+          --with-sysroot=${CROSSPI_TARGET_DIR}
+}
+
+pkg_build() {
+  make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+  make install
+}
