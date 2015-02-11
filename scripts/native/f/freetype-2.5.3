@@ -1,0 +1,24 @@
+#!/bin/bash
+
+PKG_NAME=freetype-2.5.3
+PKG_URL=http://downloads.sourceforge.net/freetype/${PKG_NAME}.tar.bz2
+
+pkg_patch() {
+	sed -i -e "/AUX.*.gxvalid/s@^# @@" \
+	       -e "/AUX.*.otvalid/s@^# @@" \
+	       ${PKG_SRC_DIR}modules.cfg
+
+	sed -ri -e 's:.*(#.*SUBPIXEL.*) .*:\1:' ${PKG_SRC_DIR}/include/config/ftoption.h
+}
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure --prefix=${CROSSPI_HOST_DIR}/usr --disable-static
+}
+
+pkg_build() {
+	make
+}
+
+pkg_install() {
+	make install
+}

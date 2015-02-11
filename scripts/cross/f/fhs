@@ -14,7 +14,7 @@ pkg_install() {
   mkdir -pv ${CROSSPI_TARGET_DIR}/usr/{,local/}share/man/man{1..8}
   
   mkdir -v ${CROSSPI_TARGET_DIR}/var/{log,mail,spool}
-  ln -sv ${CROSSPI_TARGET_DIR}/run ${CROSSPI_TARGET_DIR}/var/run
-  ln -sv ${CROSSPI_TARGET_DIR}/run/lock ${CROSSPI_TARGET_DIR}/var/lock
+  ln -sv /run ${CROSSPI_TARGET_DIR}/var/run
+  ln -sv /run/lock ${CROSSPI_TARGET_DIR}/var/lock
   mkdir -pv ${CROSSPI_TARGET_DIR}/var/{opt,cache,lib/{color,misc,locate},local}
 }

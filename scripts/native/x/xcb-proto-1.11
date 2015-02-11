@@ -1,0 +1,12 @@
+#!/bin/bash
+
+PKG_NAME=xcb-proto-1.11
+PKG_URL=http://xcb.freedesktop.org/dist/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure 	--prefix=${CROSSPI_HOST_DIR}/usr
+}
+
+pkg_install() {
+	make install
+}

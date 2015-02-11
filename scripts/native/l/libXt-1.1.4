@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PKG_NAME=libXt-1.1.4
+PKG_URL=http://xorg.freedesktop.org/releases/individual/lib/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure 	--prefix=${CROSSPI_HOST_DIR}/usr \
+					--disable-static \
+					--with-appdefaultdir=/etc/X11/app-defaults
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

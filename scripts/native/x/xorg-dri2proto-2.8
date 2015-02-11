@@ -1,0 +1,12 @@
+#!/bin/bash
+
+PKG_NAME=dri2proto-2.8
+PKG_URL=http://xorg.freedesktop.org/releases/individual/proto/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure 	--prefix=${CROSSPI_HOST_DIR}/usr
+}
+
+pkg_install() {
+	make install
+}

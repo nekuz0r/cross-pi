@@ -1,0 +1,12 @@
+#!/bin/bash
+
+PKG_NAME=xbitmaps-1.1.1
+PKG_URL=http://xorg.freedesktop.org/archive/individual/data/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=${CROSSPI_HOST_DIR}/usr
+}
+
+pkg_install() {
+	make install
+}

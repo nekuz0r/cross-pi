@@ -1,0 +1,20 @@
+#!/bin/bash
+
+PKG_NAME=xkeyboard-config-2.12
+PKG_URL=http://xorg.freedesktop.org/archive/individual/data/xkeyboard-config/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+	local PERL_VERSION=$(perl -e "print $^V")
+        export PERL5LIB=${CROSSPI_HOST_DIR}/usr/local/lib/perl/${PERL_VERSION:1}
+	
+	${PKG_SRC_DIR}/configure 	--prefix=${CROSSPI_HOST_DIR}/usr \
+					--with-xkb-rules-symlink=xorg
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

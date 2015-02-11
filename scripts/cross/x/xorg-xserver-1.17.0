@@ -10,7 +10,6 @@ pkg_configure() {
 					--with-sysroot=${CROSSPI_TARGET_DIR} \
 					--with-xkb-output=/var/lib/xkb \
 					--enable-dmx \
-					--enable-install-setuid \
 					--enable-suid-wrapper \
 					--disable-glx \
 					--disable-dri \
