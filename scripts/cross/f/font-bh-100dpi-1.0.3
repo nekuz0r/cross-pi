@@ -3,6 +3,10 @@
 PKG_NAME=font-bh-100dpi-1.0.3
 PKG_URL=http://xorg.freedesktop.org/releases/individual/font/${PKG_NAME}.tar.bz2
 
+pkg_patch() {
+  sed -i 's/MAPFILES_PATH=/MAPFILES_PATH=$PKG_CONFIG_SYSROOT_DIR/' ${PKG_SRC_DIR}/configure
+}
+
 pkg_configure() {
   ${PKG_SRC_DIR}/configure  --prefix=/usr \
           --build=${CROSSPI_BUILD} \
