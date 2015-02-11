@@ -9,7 +9,7 @@ LD_LIBRARY_PATH="$CROSSPI_HOST_DIR/lib:$CROSSPI_HOST_DIR/usr/lib:$CROSSPI_HOST_D
 	HOME=${CROSSPI_HOME}/home/${CROSSPI_SHELL} \
 	ACLOCAL_FLAGS="-I $CROSSPI_HOST_DIR/share/aclocal" \
 	PKG_CONFIG_LIBDIR="" \
-	PKG_CONFIG_PATH="$CROSSPI_HOST_DIR/lib/pkgconfig:$CROSSPI_HOST_DIR/usr/lib/pkgconfig:$CROSSPI_HOST_DIR/usr/local/lib/pkgconfig" \
+	PKG_CONFIG_PATH="$CROSSPI_HOST_DIR/lib/pkgconfig:$CROSSPI_HOST_DIR/usr/lib/pkgconfig:$CROSSPI_HOST_DIR/usr/local/lib/pkgconfig:$CROSSPI_HOST_DIR/usr/share/pkgconfig" \
   CPPFLAGS="-I$CROSSPI_HOST_DIR/include -I$CROSSPI_HOST_DIR/usr/include -I$CROSSPI_HOST_DIR/usr/local/include" \
   LDFLAGS="-L$CROSSPI_HOST_DIR/lib -L$CROSSPI_HOST_DIR/usr/lib -L$CROSSPI_HOST_DIR/usr/local/lib" \
   \
