@@ -1,0 +1,12 @@
+diff -Naur nss-3.17/nss/coreconf/location.mk nss-3.17-patched/nss/coreconf/location.mk
+--- nss-3.17/nss/coreconf/location.mk	2014-08-12 17:32:25.000000000 +0200
++++ nss-3.17-patched/nss/coreconf/location.mk	2015-02-13 14:37:06.369893733 +0100
+@@ -71,4 +71,8 @@
+     SQLITE_LIB_NAME = sqlite3
+ endif
+ 
++ifdef ZLIB_INCLUDE_DIR
++    INCLUDES += -I$(ZLIB_INCLUDE_DIR)
++endif
++
+ MK_LOCATION = included
