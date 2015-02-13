@@ -2,5 +2,7 @@
 
 crosspi_script_path() {
   local SCRIPT_NAME=${1}
-  echo ${CROSSPI_HOME}/scripts/${CROSSPI_SHELL}/${SCRIPT_NAME:0:1}/${SCRIPT_NAME}
+  local SCRIPT_DIR=${SCRIPT_NAME:0:1}
+  SCRIPT_DIR=${SCRIPT_DIR,,}
+  echo ${CROSSPI_HOME}/scripts/${CROSSPI_SHELL}/${SCRIPT_DIR}/${SCRIPT_NAME}
 }
