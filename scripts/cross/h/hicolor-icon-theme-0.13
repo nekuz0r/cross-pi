@@ -1,0 +1,15 @@
+#!/bin/bash
+
+PKG_NAME=hicolor-icon-theme-0.13
+PKG_URL=http://icon-theme.freedesktop.org/releases/${PKG_NAME}.tar.gz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR}
+}
+
+pkg_install() {
+	make install
+}

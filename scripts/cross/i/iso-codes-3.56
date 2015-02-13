@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PKG_NAME=iso-codes-3.56
+PKG_URL=http://pkg-isocodes.alioth.debian.org/downloads/${PKG_NAME}.tar.xz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR}
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

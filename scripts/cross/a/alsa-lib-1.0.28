@@ -1,0 +1,21 @@
+#!/bin/bash
+
+PKG_NAME=alsa-lib-1.0.28
+PKG_URL=http://alsa.cybermirror.org/lib/${PKG_NAME}.tar.bz2
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--sysconfdir=/etc \
+					--localstatedir=/var \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR}
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

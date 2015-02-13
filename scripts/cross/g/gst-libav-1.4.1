@@ -1,0 +1,25 @@
+#!/bin/bash
+
+PKG_NAME=gst-libav-1.4.1
+PKG_URL=http://gstreamer.freedesktop.org/src/gst-libav/${PKG_NAME}.tar.xz
+
+# Depends on : libav, orc
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--target=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--enable-orc \
+					--with-system-libav
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

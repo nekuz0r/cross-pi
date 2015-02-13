@@ -1,0 +1,24 @@
+#!/bin/bash
+
+PKG_NAME=gmp-6.0.0a
+PKG_URL=http://ftp.gnu.org/gnu//gmp/${PKG_NAME}.tar.xz
+
+PKG_EXTRACTED_DIRNAME=gmp-6.0.0
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--target=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--enable-cxx
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

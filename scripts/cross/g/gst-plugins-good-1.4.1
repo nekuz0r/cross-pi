@@ -1,0 +1,28 @@
+#!/bin/bash
+
+PKG_NAME=gst-plugins-good-1.4.1
+PKG_URL=http://gstreamer.freedesktop.org/src/gst-plugins-good/${PKG_NAME}.tar.xz
+
+# Depends on : libvpx, speex, libpng, gst-plugins-base, gdk-pixbuf, flac, cairo, orc, gstreamer, x11, xfixes, xdamage, xext, jpeg/jpeg-turbo
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--target=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--enable-orc \
+					--disable-examples \
+					--disable-rpath \
+					--disable-aalibtest \
+					--program-prefix=""
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

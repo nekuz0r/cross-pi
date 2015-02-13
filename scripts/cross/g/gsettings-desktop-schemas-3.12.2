@@ -1,0 +1,27 @@
+#!/bin/bash
+
+PKG_NAME=gsettings-desktop-schemas-3.12.2
+PKG_URL=http://ftp.gnome.org/pub/gnome/sources/gsettings-desktop-schemas/3.12/${PKG_NAME}.tar.xz
+
+# Depends on : glib
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--sysconfdir=/etc \
+					--localstatedir=/var
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}
+
+pkg_install_post() {
+	glib-compile-schemas ${CROSSPI_TARGET_DIR}/usr/share/glib-2.0/schemas
+}

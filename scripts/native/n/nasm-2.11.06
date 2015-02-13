@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=nasm-2.11.06
+PKG_URL=http://www.nasm.us/pub/nasm/releasebuilds/2.11.06/${PKG_NAME}.tar.xz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=${CROSSPI_HOST_DIR}/usr
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+PKG_NAME=libvpx-v1.3.0
+PKG_URL=http://anduin.linuxfromscratch.org/sources/other/${PKG_NAME}.tar.xz
+
+PKG_REQUIRE_SEPERATED_BUILD_DIR=y
+
+pkg_patch() {
+	sed -i 's/cp -p/cp/' ${PKG_SRC_DIR}/build/make/Makefile
+	chmod -v 644 ${PKG_SRC_DIR}/vpx/*.h
+}
+
+pkg_configure() {
+	LD=${CC} ${PKG_SRC_DIR}/configure	--prefix=/usr \
+						--target=armv6-linux-gcc \
+						--enable-shared \
+						--disable-static
+}
+
+pkg_build() {
+	LD=${CC} make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

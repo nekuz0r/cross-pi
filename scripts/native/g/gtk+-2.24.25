@@ -1,0 +1,17 @@
+#!/bin/bash
+
+PKG_NAME=gtk+-2.24.25
+PKG_URL=
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=${CROSSPI_HOST_DIR}/usr \
+					--sysconfdir=${CROSSPI_HOST_DIR}/etc
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

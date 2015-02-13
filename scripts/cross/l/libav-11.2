@@ -1,0 +1,47 @@
+#!/bin/bash
+
+PKG_NAME=libav-11.2
+PKG_URL=https://libav.org/releases/${PKG_NAME}.tar.xz
+
+# Depends on : gnutls zlib bzip2 fdk-aac lame speex libogg libvorbis libtheora libvpx x264 xvid freetype
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--disable-static \
+					--disable-avserver \
+					--disable-avplay \
+					--disable-avconv \
+					--disable-avprobe \
+					--disable-doc \
+					--enable-optimizations \
+					--enable-gpl \
+					--enable-cross-compile \
+					--arch=arm \
+					--cross-prefix=$CROSS \
+					--enable-pic \
+					--target-os=linux \
+					--enable-shared \
+					--pkg-config=pkg-config \
+					--enable-libfdk-aac \
+					--enable-libmp3lame \
+					--enable-libspeex \
+					--enable-libx264 \
+					--enable-libxvid \
+					--enable-libvorbis \
+					--enable-libtheora \
+					--enable-libvpx \
+					--enable-libfreetype \
+					--enable-gnutls \
+					--enable-optimizations \
+					--disable-neon \
+					--disable-debug \
+					--enable-nonfree
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

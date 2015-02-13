@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PKG_NAME=cairo-1.12.18
+PKG_URL=http://cairographics.org/releases/${PKG_NAME}.tar.xz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=${CROSSPI_HOST_DIR}/usr \
+					--disable-static \
+					--enable-tee
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

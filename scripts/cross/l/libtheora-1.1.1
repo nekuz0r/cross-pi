@@ -1,0 +1,35 @@
+#!/bin/bash
+
+PKG_NAME=libtheora-1.1.1
+PKG_URL=http://downloads.xiph.org/releases/theora/${PKG_NAME}.tar.xz
+
+# Depends on : libogg, libvorbis, libpng, cairo
+
+pkg_patch() {
+	sed -i 's/png_\(sizeof\)/\1/g' ${PKG_SRC_DIR}/examples/png2theora.c
+	patch -Np1 -i ${CROSSPI_HOME}/patches/l/libtheora-1.1.1/001-no-sdl-no-docs.patch
+	autoreconf -fiv ${ACLOCAL_FLAGS} -I ${PKG_SRC_DIR}/m4
+}
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--target=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--disable-oggtest \
+					--disable-vorbistest \
+					--disable-sdltest \
+					--disable-examples \
+					--disable-asm \
+					--disable-float
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

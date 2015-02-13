@@ -1,0 +1,28 @@
+#!/bin/bash
+
+PKG_NAME=sqlite-3.8.6
+PKG_URL=http://sqlite.org/2014/sqlite-autoconf-3080600.tar.gz
+
+PKG_EXTRACTED_DIRNAME=sqlite-autoconf-3080600
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					CFLAGS="-O2 \
+						-DSQLITE_THREADSAFE=1 \
+						-DSQLITE_ENABLE_FTS3=1 \
+						-DSQLITE_ENABLE_COLUMN_METADATA=1 \
+						-DSQLITE_ENABLE_UNLOCK_NOTIFY=1 \
+						-DSQLITE_SECURE_DELETE=1"
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

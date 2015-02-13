@@ -1,0 +1,28 @@
+#!/bin/bash
+
+PKG_NAME=ldns-1.6.17
+PKG_URL=http://www.nlnetlabs.nl/downloads/ldns/${PKG_NAME}.tar.gz
+
+# Depends on : openssl, Certificat Authority Certificates
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--disable-rpath \
+					--sysconfdir=/etc \
+					--with-drill \
+					--with-ssl=${CROSSPI_TARGET_DIR}/usr \
+					ac_cv_func_malloc_0_nonnull=yes \
+					ac_cv_func_realloc_0_nonnull=yes
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

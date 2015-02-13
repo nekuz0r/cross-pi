@@ -1,0 +1,29 @@
+#!/bin/bash
+
+PKG_NAME=nspr-4.10.7
+PKG_URL=http://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v4.10.7/src/${PKG_NAME}.tar.gz
+
+PKG_REQUIRE_SEPERATED_BUILD_DIR=y
+
+pkg_patch() {
+	sed -ri 's#^(RELEASE_BINS =).*#\1#' ${PKG_SRC_DIR}/nspr/pr/src/misc/Makefile.in
+	sed -i 's#$(LIBRARY) ##' ${PKG_SRC_DIR}/nspr/config/rules.mk
+}
+
+pkg_configure() {
+	${PKG_SRC_DIR}/nspr/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_BUILD} \
+					--target=${CROSSPI_TARGET} \
+					--with-arm-kuser \
+					--with-mozilla \
+					--with-pthreads
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

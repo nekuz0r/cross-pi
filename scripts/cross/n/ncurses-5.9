@@ -5,20 +5,21 @@ PKG_URL=http://ftp.gnu.org/gnu/ncurses/${PKG_NAME}.tar.gz
 
 pkg_configure() {
 	$PKG_SRC_DIR/configure	--build=$CROSSPI_BUILD \
-													--host=$CROSSPI_HOST \
-													--target=$CROSSPI_TARGET \
-													--prefix=/usr \
-													--with-sysroot=$CROSSPI_TARGET_DIR \
-													--mandir=/usr/share/man \
-													--with-shared \
-													--without-debug \
-													--enable-pc-files \
-													--enable-widec \
-													--with-build-cc="gcc -D_GNU_SOURCE"
+				--host=$CROSSPI_HOST \
+				--target=$CROSSPI_TARGET \
+				--prefix=/usr \
+				--with-sysroot=$CROSSPI_TARGET_DIR \
+				--program-prefix="" \
+				--mandir=/usr/share/man \
+				--with-shared \
+				--without-debug \
+				--enable-pc-files \
+				--enable-widec \
+				--with-build-cc="gcc -D_GNU_SOURCE"
 }
 
-pkg_make() {
-	make
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
 }
 
 pkg_install() {

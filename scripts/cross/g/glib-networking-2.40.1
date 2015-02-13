@@ -1,0 +1,24 @@
+#!/bin/bash
+
+PKG_NAME=glib-networking-2.40.1
+PKG_URL=http://ftp.gnome.org/pub/gnome/sources/glib-networking/2.40/${PKG_NAME}.tar.xz
+
+# Depends on : gnutls, gsettings-desktop-schemas, p11-kit, Certificate Authority Certificates, libproxy
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--disable-glibtest \
+					--with-ca-certificates=/etc/ssl/ca-bundle.crt
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

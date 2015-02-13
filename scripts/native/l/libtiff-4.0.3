@@ -1,0 +1,17 @@
+#!/bin/bash
+
+PKG_NAME=tiff-4.0.3
+PKG_URL=http://download.osgeo.org/libtiff/${PKG_NAME}.tar.gz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=${CROSSPI_HOST_DIR}/usr \
+					--disable-static
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+PKG_NAME=p11-kit-0.20.6
+PKG_URL=http://p11-glue.freedesktop.org/releases/p11-kit-0.20.6.tar.gz
+
+# Depends on : Certificate Authority Certificates, libtasn1, libffi, nss
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--disable-rpath \
+					--sysconfdir=/etc \
+					--localstatedir=/var \
+					--enable-debug=no \
+					--with-hash-impl=freebl
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

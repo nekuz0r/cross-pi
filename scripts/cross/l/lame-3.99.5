@@ -1,0 +1,23 @@
+#!/bin/bash
+
+PKG_NAME=lame-3.99.5
+PKG_URL=http://downloads.sourceforge.net/project/lame/lame/3.99/${PKG_NAME}.tar.gz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--disable-rpath \
+					--disable-gtktest \
+					--disable-frontend
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

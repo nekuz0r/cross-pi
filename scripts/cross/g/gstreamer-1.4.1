@@ -1,0 +1,29 @@
+#!/bin/bash
+
+PKG_NAME=gstreamer-1.4.1
+PKG_URL=http://gstreamer.freedesktop.org/src/gstreamer/${PKG_NAME}.tar.xz
+
+# Depends on : glib, gsl
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--target=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--program-prefix="" \
+					--disable-static \
+					--disable-tests \
+					--disable-benchmarks \
+					--disable-examples \
+					--disable-debug \
+					--disable-rpath
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

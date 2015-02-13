@@ -1,0 +1,24 @@
+#!/bin/bash
+
+PKG_NAME=fdk-aac-0.1.3
+PKG_URL=https://github.com/mstorsjo/fdk-aac/archive/v0.1.3.tar.gz
+
+pkg_configure_pre() {
+	${PKG_SRC_DIR}/autogen.sh
+}
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

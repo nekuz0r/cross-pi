@@ -1,0 +1,23 @@
+#!/bin/bash
+
+PKG_NAME=speex-1.2rc2
+PKG_URL=http://downloads.us.xiph.org/releases/speex/${PKG_NAME}.tar.gz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--enable-arm5e-asm \
+					--disable-float-api \
+					--enable-fixed-point
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+PKG_NAME=orc-0.4.18
+PKG_URL=http://code.entropywave.com/download/orc/orc-0.4.18.tar.gz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure 	--prefix=/usr \
+					--build=$CROSSPI_BUILD \
+					--host=$CROSSPI_TARGET \
+					--target=$CROSSPI_TARGET \
+					--with-sysroot=$CROSSPI_TARGET_DIR \
+					--disable-static \
+					--disable-backend
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}
