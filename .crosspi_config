@@ -3,3 +3,6 @@
 # CROSSPI_SYSROOT_DIR=${CROSSPI_HOME}/target
 
 LC_CTYPE="en_US.UTF-8"
+
+local PERL_VERSION=$(perl -e "print $^V")
+export PERL5LIB=${CROSSPI_HOST_DIR}/usr/local/lib/perl/${PERL_VERSION:1}
