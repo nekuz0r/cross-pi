@@ -4,11 +4,11 @@ PKG_NAME=file-5.20
 PKG_URL=ftp://ftp.astron.com/pub/file/${PKG_NAME}.tar.gz
 
 pkg_configure() {
-	${PKG_SRC_DIR}/configure --prefix=/usr --host=${CROSSPI_TARGET}
+	${PKG_SRC_DIR}/configure --prefix=/usr --host=${CROSSPI_TARGET} --with-sysroot=${CROSSPI_TARGET_DIR}
 }
 
 pkg_build() {
-	make
+	make -j${CROSSPI_BUILD_NPROC}
 }
 
 pkg_install() {

@@ -4,19 +4,20 @@ PKG_NAME=zlib-1.2.8
 PKG_URL=http://www.zlib.net/${PKG_NAME}.tar.xz
 
 pkg_configure() {
-	$PKG_SRC_DIR/configure --prefix=/usr
+	$PKG_SRC_DIR/configure --prefix=/usr --shared
 }
 
 pkg_build() {
-	make
+	make -j${CROSSPI_BUILD_NPROC}
 }
 
 pkg_install() {
-	make install
+	make install LDCONFIG=true
 }
 
 pkg_install_post() {
-	mkdir -pv ${CROSSPI_TARGET_DIR}/lib
-	mv -v ${CROSSPI_TARGET_DIR}/usr/lib/libz.so.* ${CROSSPI_TARGET_DIR}/lib
-	ln -sfv ../../lib/$(readlink ${CROSSPI_TARGET_DIR}/usr/lib/libz.so) ${CROSSPI_TARGET_DIR}/usr/lib/libz.so
+	#mkdir -pv ${CROSSPI_TARGET_DIR}/lib
+	#mv -v ${CROSSPI_TARGET_DIR}/usr/lib/libz.so.* ${CROSSPI_TARGET_DIR}/lib
+	#ln -sfv ../../lib/$(readlink ${CROSSPI_TARGET_DIR}/usr/lib/libz.so) ${CROSSPI_TARGET_DIR}/usr/lib/libz.so
+	rm -f ${CROSSPI_TARGET_DIR}/usr/lib/libz.a
 }

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+PKG_NAME=iana-etc-2.30
+PKG_URL=http://sethwklein.net/${PKG_NAME}.tar.bz2
+
+pkg_build() {
+	make
+}
+
+pkg_install() {
+	make install DESTDIR=${CROSSPI_TARGET_DIR}
+}

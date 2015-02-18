@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PKG_NAME=gdb-7.8
+PKG_URL=http://ftp.gnu.org/gnu/gdb/${PKG_NAME}.tar.xz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure 	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--target=${CROSSPI_TARGET}
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

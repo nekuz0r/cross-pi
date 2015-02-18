@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME=luafilesystem-1.6.3
+PKG_URL=https://github.com/keplerproject/luafilesystem/archive/v_1_6_3.tar.gz
+
+PKG_EXTRACTED_DIRNAME=luafilesystem-v_1_6_3
+
+# Depends on : lua
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC} PREFIX=$DESTDIR/usr CC=${CC} RANLIB=${RANLIB}
+}
+
+pkg_install() {
+	make install
+}

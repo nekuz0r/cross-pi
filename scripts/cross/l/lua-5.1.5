@@ -1,0 +1,21 @@
+#!/bin/bash
+
+PKG_NAME=lua-5.1.5
+PKG_URL=http://www.lua.org/ftp/${PKG_NAME}.tar.gz
+
+# Depends on readline, history, ncurses
+
+pkg_patch() {
+	patch -Np1 -i ${CROSSPI_HOME}/patches/l/lua-5.1.5/001-root-path.patch
+	patch -Np1 -i ${CROSSPI_HOME}/patches/l/lua-5.1.5/002-shared-libs.patch
+	patch -Np1 -i ${CROSSPI_HOME}/patches/l/lua-5.1.5/003-fix-reader-at-eoz.patch
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC} linux BUILDMODE=dynamic
+}
+
+pkg_install() {
+	make install INSTALL_TOP=${CROSSPI_TARGET_DIR}/usr
+	install -m 0644 -D ${PKG_SRC_DIR}/etc/lua.pc ${CROSSPI_TARGET_DIR}/usr/lib/pkgconfig/lua.pc
+}

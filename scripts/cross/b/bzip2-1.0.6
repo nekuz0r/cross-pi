@@ -4,30 +4,27 @@ PKG_NAME=bzip2-1.0.6
 PKG_URL=http://www.bzip.org/1.0.6/${PKG_NAME}.tar.gz
 
 pkg_patch() {
+	patch -Np1 -i ${CROSSPI_HOME}/patches/b/${PKG_NAME}/001-improve-build-system.patch
+	patch -Np1 -i ${CROSSPI_HOME}/patches/b/${PKG_NAME}/002-build-objects-twice.patch
 	cp ${PKG_SRC_DIR}/Makefile{,.orig}
 	sed -e "/^all:/s/ test//" ${PKG_SRC_DIR}/Makefile.orig > ${PKG_SRC_DIR}/Makefile
-	sed -i -e 's:ln -s -f $(PREFIX)/bin/:ln -s :' ${PKG_SRC_DIR}/Makefile
 	sed -i "s@(PREFIX)/man@(PREFIX)/share/man@g" ${PKG_SRC_DIR}/Makefile
 }
 
-pkg_build_pre() {
-	make -f ${PKG_SRC_DIR}/Makefile-libbz2_so CC="${CC}" AR="${AR}" RANLIB="${RANLIB}"
-	make clean
-}
-
 pkg_build() {
+	make -f ${PKG_SRC_DIR}/Makefile-libbz2_so CC="${CC}" AR="${AR}" RANLIB="${RANLIB}"
 	make CC="${CC}" AR="${AR}" RANLIB="${RANLIB}"
 }
 
 pkg_install() {
 	make PREFIX=${CROSSPI_TARGET_DIR}/usr install
+	make -f ${PKG_SRC_DIR}/Makefile-libbz2_so PREFIX=${CROSSPI_TARGET_DIR}/usr install
 }
 
 pkg_install_post() {
-	cp -v ${PKG_BUILD_DIR}/bzip2-shared ${CROSSPI_TARGET_DIR}/bin/bzip2
-	cp -av ${PKG_BUILD_DIR}/libbz2.so* ${CROSSPI_TARGET_DIR}/lib
-	ln -sfv ../../lib/libbz2.so.1.0 ${CROSSPI_TARGET_DIR}/usr/lib/libbz2.so
+	rm -v ${CROSSPI_TARGET_DIR}/usr/lib/libbz2.a
 	rm -v ${CROSSPI_TARGET_DIR}/usr/bin/{bunzip2,bzcat,bzip2}
-	ln -sfv bzip2 ${CROSSPI_TARGET_DIR}/bin/bunzip2
-	ln -sfv bzip2 ${CROSSPI_TARGET_DIR}/bin/bzcat
+	cp -v ${PKG_BUILD_DIR}/bzip2-shared ${CROSSPI_TARGET_DIR}/usr/bin/bzip2
+	ln -sfv bzip2 ${CROSSPI_TARGET_DIR}/usr/bin/bunzip2
+	ln -sfv bzip2 ${CROSSPI_TARGET_DIR}/usr/bin/bzcat
 }

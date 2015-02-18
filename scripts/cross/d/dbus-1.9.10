@@ -1,0 +1,40 @@
+#!/bin/bash
+
+PKG_NAME=dbus-1.9.10
+PKG_URL=http://dbus.freedesktop.org/releases/dbus/${PKG_NAME}.tar.gz
+
+# Depends on xorg libraries, expat
+
+pkg_configure() {
+	./configure	--prefix=/usr \
+			--build=$CROSSPI_BUILD \
+			--host=$CROSSPI_TARGET \
+			--target=$CROSSPI_TARGET \
+			--with-sysroot=${CROSSPI_TARGET_DIR} \
+			--sysconfdir=/etc \
+			--localstatedir=/var \
+			--with-console-auth-dir=/run/console \
+			--without-systemdsystemunitdir \
+			--disable-systemd \
+			--disable-static \
+			--disable-tests \
+			--disable-asserts \
+			--enable-abstract-sockets \
+			--disable-selinux \
+			--disable-xml-docs \
+			--disable-doxygen-docs \
+			--disable-dnotify \
+			--with-xml=expat \
+			--with-system-socket=/var/run/dbus/system_bus_socket \
+			--with-system-pid-file=/var/run/messagebus.pid \
+			--with-x \
+			--with-dbus-user=dbus
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

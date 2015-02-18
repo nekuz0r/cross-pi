@@ -1,10 +1,15 @@
 #!/bin/bash
 
 PKG_NAME=expat-2.1.0
-PKG_URL=http://prdownloads.sourceforge.net/expat/${PKG_NAME}.tar.gz
+PKG_URL=http://ufpr.dl.sourceforge.net/project/expat/expat/2.1.0/${PKG_NAME}.tar.gz
 
 pkg_configure() {
-	${PKG_SRC_DIR}/configure --prefix=/usr --build=${CROSSPI_BUILD} --host=${CROSSPI_TARGET} --target=${CROSSPI_TARGET} --with-sysroot=${CROSSPI_TARGET_DIR}
+	${PKG_SRC_DIR}/configure 	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--target=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static
 }
 
 pkg_build() {
@@ -12,5 +17,5 @@ pkg_build() {
 }
 
 pkg_install() {
-	make install INSTALL_ROOT=${CROSSPI_TARGET_DIR}
+	make installlib INSTALL_ROOT=${CROSSPI_TARGET_DIR}
 }

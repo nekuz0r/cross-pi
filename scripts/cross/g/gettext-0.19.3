@@ -3,18 +3,39 @@
 PKG_NAME=gettext-0.19.3
 PKG_URL=http://ftp.gnu.org/gnu/gettext/${PKG_NAME}.tar.xz
 
+PKG_REQUIRE_SEPERATED_BUILD_DIR=y
+
+pkg_patch() {
+	# Disable the build of doc and tests
+	sed -i '/^SUBDIRS/s/ doc//;/^SUBDIRS/s/tests$$//' ${PKG_SRC_DIR}/gettext-runtime/Makefile.in
+}
+
 pkg_configure() {
-	$PKG_SRC_DIR/configure	--build=$CROSSPI_BUILD \
-													--host=$CROSSPI_HOST \
-													--target=$CROSSPI_TARGET \
-													--prefix=/usr \
-													--docdir=/usr/share/doc/gettext-0.19.3
+	${PKG_SRC_DIR}/gettext-runtime/configure	--build=$CROSSPI_BUILD \
+							--host=$CROSSPI_HOST \
+							--target=$CROSSPI_TARGET \
+							--prefix=/usr \
+							--disable-libasprintf \
+							--disable-acl \
+							--disable-openmp \
+							--disable-rpath \
+							--disable-java \
+							--disable-native-java \
+							--disable-csharp \
+							--disable-relocatable \
+							--without-emacs \
+							--enable-nls
 }
 
 pkg_build() {
-	make
+	make -j${CROSSPI_BUILD_NPROC}
 }
 
 pkg_install() {
 	make install
+}
+
+pkg_install_post() {
+	rm -Rf ${CROSSPI_TARGET_DIR}/usr/share/gettext/ABOUT-NLS
+	rmdir --ignore-fail-on-non-empty ${CROSSPI_TARGET_DIR}/usr/share/gettext
 }
