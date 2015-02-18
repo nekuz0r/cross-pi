@@ -1,0 +1,25 @@
+#!/bin/bash
+
+PKG_NAME=dialog-1.2
+PKG_URL=ftp://ftp.us.debian.org/debian/pool/main/d/dialog/dialog_1.2-20140911.orig.tar.gz
+
+PKG_EXTRACTED_DIRNAME=dialog-1.2-20140911
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--disable-rpath \
+					--disable-rpath-hack \
+					--with-shared
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

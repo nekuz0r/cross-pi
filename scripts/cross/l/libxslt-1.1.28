@@ -1,0 +1,26 @@
+#!/bin/bash
+
+PKG_NAME=libxslt-1.1.28
+PKG_URL=http://xmlsoft.org/sources/libxslt-1.1.28.tar.gz
+
+# Depends on : libxml2
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--without-python \
+					--without-crypto \
+					--with-libxml-prefix=$CROSSPI_TARGET_DIR/usr \
+					--with-libxml-include-prefix=$CROSSPI_TARGET_DIR/usr/include/libxml2
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+PKG_NAME=alsa-utils-1.0.28
+PKG_URL=
+
+# Depends on : alsa-lib, libsamplerate, Dialog??
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-rpath \
+					--disable-xmlto
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

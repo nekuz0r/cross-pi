@@ -1,19 +1,16 @@
 #!/bin/bash
 
-PKG_NAME=gst-libav-1.4.1
-PKG_URL=http://gstreamer.freedesktop.org/src/gst-libav/${PKG_NAME}.tar.xz
+PKG_NAME=libwebp-0.4.1
+PKG_URL=http://downloads.webmproject.org/releases/webp/libwebp-0.4.1.tar.gz
 
-# Depends on : libav, orc
+# Depends on : libjpeg-turbo, libpng, libtiff
 
 pkg_configure() {
 	${PKG_SRC_DIR}/configure	--prefix=/usr \
 					--build=${CROSSPI_BUILD} \
 					--host=${CROSSPI_TARGET} \
-					--target=${CROSSPI_TARGET} \
 					--with-sysroot=${CROSSPI_TARGET_DIR} \
-					--disable-static \
-					--enable-orc \
-					--with-system-libav
+					--disable-static 
 }
 
 pkg_build() {

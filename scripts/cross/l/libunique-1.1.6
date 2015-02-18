@@ -1,0 +1,27 @@
+#!/bin/bash
+
+PKG_NAME=libunique-1.1.6
+PKG_URL=http://ftp.gnome.org/pub/gnome/sources/libunique/1.1/libunique-1.1.6.tar.bz2
+
+pkg_patch() {
+	sed -i 's/G_CONST_RETURN/const/g' unique/*.h
+	sed -i 's/G_CONST_RETURN/const/g' unique/*.c
+	autoreconf -fiv ${ACLOCAL_FLAGS}
+}
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--enable-debug=no
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

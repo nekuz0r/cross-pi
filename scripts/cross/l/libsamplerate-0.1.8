@@ -1,0 +1,23 @@
+#!/bin/bash
+
+PKG_NAME=libsamplerate-0.1.8
+PKG_URL=http://www.mega-nerd.com/SRC/${PKG_NAME}.tar.gz
+
+# Depends on : libsndfile
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--target=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+PKG_NAME=libxml2-2.9.1
+PKG_URL=http://xmlsoft.org/sources/${PKG_NAME}.tar.gz
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--with-history \
+					--without-python
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}
