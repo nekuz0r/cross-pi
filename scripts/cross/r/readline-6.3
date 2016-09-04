@@ -5,7 +5,34 @@ PKG_URL=http://ftp.gnu.org/gnu/readline/${PKG_NAME}.tar.gz
 
 pkg_patch() {
 	patch -Np1 -i ${CROSSPI_HOME}/patches/r/readline-6.3/001-upstream-fixes-3.patch
+	sed -i '/MV.*old/d' ${PKG_SRC_DIR}/Makefile.in
+	sed -i '/{OLDSUFF}/c:' ${PKG_SRC_DIR}/support/shlib-install
 }
 
 pkg_configure() {
+	${PKG_SRC_DIR}/configure 	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static \
+					--docdir=/usr/share/doc/readline-6.3 \
+					bash_cv_func_sigsetjmp=yes \
+					bash_cv_wcwidth_broken=no
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC} SHLIB_LIBS=-lncurses
+}
+
+pkg_install() {
+	make install DESTDIR=${CROSSPI_TARGET_DIR}
+}
+
+pkg_install_post() {
+	rm -Rfv ${CROSSPI_TARGET_DIR}/usr/share/doc/readline-6.3
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/info/readline.info
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/info/history.info
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/info/rluserman.info
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man3/readline.3
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man3/history.3
 }

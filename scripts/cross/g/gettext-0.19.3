@@ -36,6 +36,19 @@ pkg_install() {
 }
 
 pkg_install_post() {
-	rm -Rf ${CROSSPI_TARGET_DIR}/usr/share/gettext/ABOUT-NLS
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/gettext/ABOUT-NLS
 	rmdir --ignore-fail-on-non-empty ${CROSSPI_TARGET_DIR}/usr/share/gettext
+	rm -Rfv ${CROSSPI_TARGET_DIR}/usr/share/doc/gettext
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man1/envsubst.1
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man1/gettext.1
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man1/ngettext.1
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man3/bind_textdomain_codeset.3
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man3/bindtextdomain.3
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man3/dcgettext.3
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man3/dcngettext.3
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man3/dgettext.3
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man3/dngettext.3
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man3/gettext.3
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man3/ngettext.3
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man3/textdomain.3
 }

@@ -3,6 +3,11 @@
 PKG_NAME=libpipeline-1.4.0
 PKG_URL=http://download.savannah.gnu.org/releases/libpipeline/${PKG_NAME}.tar.gz
 
+pkg_patch() {
+	sed -i '/^SUBDIRS =/ s/man //' ${PKG_SRC_DIR}/Makefile.in
+	sed -i '/^DIST_SUBDIRS =/ s/man //' ${PKG_SRC_DIR}/Makefile.in
+}
+
 pkg_configure() {
 	${PKG_SRC_DIR}/configure	--prefix=/usr \
 					--build=${CROSSPI_BUILD} \

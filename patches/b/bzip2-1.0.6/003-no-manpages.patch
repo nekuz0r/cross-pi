@@ -1,0 +1,27 @@
+diff -u -r bzip2-1.0.6.orig/Makefile bzip2-1.0.6/Makefile
+--- bzip2-1.0.6.orig/Makefile	2015-02-19 00:45:08.949779397 +0100
++++ bzip2-1.0.6/Makefile	2015-02-19 00:45:42.697778524 +0100
+@@ -82,8 +82,6 @@
+ 	chmod a+x $(PREFIX)/bin/bunzip2
+ 	chmod a+x $(PREFIX)/bin/bzcat
+ 	chmod a+x $(PREFIX)/bin/bzip2recover
+-	cp -f bzip2.1 $(PREFIX)/share/man/man1
+-	chmod a+r $(PREFIX)/share/man/man1/bzip2.1
+ 	cp -f bzlib.h $(PREFIX)/include
+ 	chmod a+r $(PREFIX)/include/bzlib.h
+ 	cp -f libbz2.a $(PREFIX)/lib
+@@ -98,14 +96,6 @@
+ 	cp -f bzdiff $(PREFIX)/bin/bzdiff
+ 	ln -s -f bzdiff $(PREFIX)/bin/bzcmp
+ 	chmod a+x $(PREFIX)/bin/bzdiff
+-	cp -f bzgrep.1 bzmore.1 bzdiff.1 $(PREFIX)/share/man/man1
+-	chmod a+r $(PREFIX)/share/man/man1/bzgrep.1
+-	chmod a+r $(PREFIX)/share/man/man1/bzmore.1
+-	chmod a+r $(PREFIX)/share/man/man1/bzdiff.1
+-	echo ".so man1/bzgrep.1" > $(PREFIX)/share/man/man1/bzegrep.1
+-	echo ".so man1/bzgrep.1" > $(PREFIX)/share/man/man1/bzfgrep.1
+-	echo ".so man1/bzmore.1" > $(PREFIX)/share/man/man1/bzless.1
+-	echo ".so man1/bzdiff.1" > $(PREFIX)/share/man/man1/bzcmp.1
+ 
+ clean: 
+ 	rm -f *.o libbz2.a bzip2 bzip2recover \

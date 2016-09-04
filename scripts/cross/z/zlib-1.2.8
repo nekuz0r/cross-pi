@@ -20,4 +20,5 @@ pkg_install_post() {
 	#mv -v ${CROSSPI_TARGET_DIR}/usr/lib/libz.so.* ${CROSSPI_TARGET_DIR}/lib
 	#ln -sfv ../../lib/$(readlink ${CROSSPI_TARGET_DIR}/usr/lib/libz.so) ${CROSSPI_TARGET_DIR}/usr/lib/libz.so
 	rm -f ${CROSSPI_TARGET_DIR}/usr/lib/libz.a
+	rm -f ${CROSSPI_TARGET_DIR}/usr/share/man/man3/zlib.3
 }

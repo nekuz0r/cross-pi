@@ -9,6 +9,7 @@ pkg_patch() {
 	cp ${PKG_SRC_DIR}/Makefile{,.orig}
 	sed -e "/^all:/s/ test//" ${PKG_SRC_DIR}/Makefile.orig > ${PKG_SRC_DIR}/Makefile
 	sed -i "s@(PREFIX)/man@(PREFIX)/share/man@g" ${PKG_SRC_DIR}/Makefile
+	patch -Np1 -i ${CROSSPI_HOME}/patches/b/${PKG_NAME}/003-no-manpages.patch
 }
 
 pkg_build() {

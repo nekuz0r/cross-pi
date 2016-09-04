@@ -1,0 +1,40 @@
+#!/bin/bash
+
+PKG_NAME=pcre-8.36
+PKG_URL=http://downloads.sourceforge.net/pcre/${PKG_NAME}.tar.bz2
+
+# Depends on : zlib, bzip2, readline
+
+pkg_patch() {
+	patch -Np1 -i ${CROSSPI_HOME}/patches/p/${PKG_NAME}/001-fix-CVE-2014-8964.patch
+}
+
+pkg_configure() {
+	${PKG_SRC_DIR}/configure	--prefix=/usr \
+					--build=${CROSSPI_BUILD} \
+					--host=${CROSSPI_TARGET} \
+					--disable-static \
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--enable-pcre8 \
+					--enable-pcre16 \
+					--enable-pcre32 \
+					--enable-utf \
+					--enable-unicode-properties \
+					--enable-pcregrep-libz \
+					--enable-pcregrep-libbz2 \
+					--enable-pcretest-libreadline
+}
+
+pkg_build() {
+	make -j${CROSSPI_BUILD_NPROC}
+}
+
+pkg_install() {
+	make install
+}
+
+pkg_install_post() {
+	rm -Rfv ${CROSSPI_TARGET_DIR}/usr/share/doc/pcre
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man1/pcre*
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/man/man3/pcre*
+}

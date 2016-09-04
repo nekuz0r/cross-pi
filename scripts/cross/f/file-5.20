@@ -3,6 +3,15 @@
 PKG_NAME=file-5.20
 PKG_URL=ftp://ftp.astron.com/pub/file/${PKG_NAME}.tar.gz
 
+PKG_DEPENDENCIES=zlib
+
+# Depends on zlib
+
+pkg_patch() {
+	# Disable tests and doc
+	sed -i '/^SUBDIRS =/ s/tests //;s/doc //' Makefile.in
+}
+
 pkg_configure() {
 	${PKG_SRC_DIR}/configure --prefix=/usr --host=${CROSSPI_TARGET} --with-sysroot=${CROSSPI_TARGET_DIR}
 }

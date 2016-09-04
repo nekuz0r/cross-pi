@@ -3,8 +3,16 @@
 PKG_NAME=glib-2.42.1
 PKG_URL=http://ftp.gnome.org/pub/gnome/sources/glib/2.42/glib-2.42.1.tar.xz
 
+# Depends on libffi, zlib, gettext, pcre
+
 pkg_configure() {
-	$PKG_SRC_DIR/configure --prefix=/usr --build=$CROSSPI_BUILD --host=$CROSSPI_HOST --target=$CROSSPI_TARGET --with-sysroot=${CROSSPI_TARGET_DIR} \
+	$PKG_SRC_DIR/configure	--prefix=/usr \
+				--build=$CROSSPI_BUILD \
+				--host=$CROSSPI_HOST \
+				--with-sysroot=${CROSSPI_TARGET_DIR} \
+				--disable-man \
+				--disable-static \
+				--with-pcre=system \
 	ac_cv_func_posix_getpwuid_r=yes glib_cv_stack_grows=no \
 	glib_cv_uscore=no ac_cv_func_strtod=yes \
 	ac_fsusage_space=yes fu_cv_sys_stat_statfs2_bsize=yes \
@@ -44,4 +52,19 @@ pkg_build() {
 
 pkg_install() {
 	make install
+}
+
+pkg_install_post() {
+	rm -Rf ${CROSSPI_TARGET_DIR}/usr/share/gtk-doc/html/gio
+	rm -Rf ${CROSSPI_TARGET_DIR}/usr/share/gtk-doc/html/glib
+	rm -Rf ${CROSSPI_TARGET_DIR}/usr/share/gtk-doc/html/gobject
+	rmdir --ignore-fail-on-non-empty ${CROSSPI_TARGET_DIR}/usr/share/gtk-doc/html
+	rmdir --ignore-fail-on-non-empty ${CROSSPI_TARGET_DIR}/usr/share/gtk-doc
+	rm -v ${CROSSPI_TARGET_DIR}/usr/bin/glib-genmarshal
+	rm -v ${CROSSPI_TARGET_DIR}/usr/bin/glib-gettextsize
+	rm -v ${CROSSPI_TARGET_DIR}/usr/bin/glib-mkenums
+	rm -v ${CROSSPI_TARGET_DIR}/usr/bin/gobject-query
+	rm -v ${CROSSPI_TARGET_DIR}/usr/bin/gtester
+	rm -v ${CROSSPI_TARGET_DIR}/usr/bin/gtester-report
+
 }

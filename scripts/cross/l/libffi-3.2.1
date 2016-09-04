@@ -3,13 +3,23 @@
 PKG_NAME=libffi-3.2.1
 PKG_URL=ftp://sourceware.org/pub/libffi/${PKG_NAME}.tar.gz
 
+pkg_patch() {
+	# Install headers into /usr/include instead of /usr/lib/libffi-3.2.1/include
+	sed -e '/^includesdir/ s/$(libdir).*$/$(includedir)/' -i ${PKG_SRC_DIR}/include/Makefile.in
+	sed -e '/^includedir/ s/=.*$/=@includedir@/' -e 's/^Cflags: -I${includedir}/Cflags:/' -i ${PKG_SRC_DIR}/libffi.pc.in 
+
+	# Disable manpages
+	sed -i '/^SUBDIRS =/ s/man//' ${PKG_SRC_DIR}/Makefile.in
+}
+
 pkg_configure() {
 	${PKG_SRC_DIR}/configure	--build=${CROSSPI_BUILD} \
 					--host=${CROSSPI_HOST} \
 					--target=${CROSSPI_TARGET} \
 					--prefix=/usr \
 					--program-prefix="" \
-					--with-sysroot=${CROSSPI_TARGET_DIR}
+					--with-sysroot=${CROSSPI_TARGET_DIR} \
+					--disable-static
 }
 
 pkg_build() {
@@ -18,4 +28,8 @@ pkg_build() {
 
 pkg_install() {
 	make install
+}
+
+pkg_install_post() {
+	rm -v ${CROSSPI_TARGET_DIR}/usr/share/info/libffi.info
 }
